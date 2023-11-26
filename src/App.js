@@ -1,13 +1,17 @@
-import logo from "./logo.svg";
 import "./App.css";
-import { Button } from "react-bootstrap";
-import "../node_modules/bootstrap/scss/bootstrap.scss";
-import LoginCard from "./components/cards/LoginCard";
+import "../src/css/custom.min.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Login } from "./Pages/Login";
+import Home from "./Pages/Home";
 function App() {
   return (
     <div className="App">
-  <LoginCard/>
-
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

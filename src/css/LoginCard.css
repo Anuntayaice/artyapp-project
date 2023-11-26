@@ -12,5 +12,5 @@
 
 /* Optional: Add styles for focus state */
 .input:focus {
-  border-bottom: 2px solid #A380D0; /* Change color for focus state */
+  border-bottom: 2px solid #FAF45A; /* Change color for focus state */
 }

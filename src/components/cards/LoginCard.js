@@ -8,9 +8,7 @@ import {
   InputGroup,
   Image,
 } from "react-bootstrap";
-import "./LoginCard.css";
-import "../buttons/Button.css";
-
+import "../../css/LoginCard.css";
 const LoginCard = () => {
   return (
     <div>
