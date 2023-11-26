@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Button, Row, Col, Image } from "react-bootstrap";
 import ProgressBar from "react-bootstrap/ProgressBar";
-const ExCard = ({ imageSrc , text}) => {
+const ExCard = ({ imageSrc, text, progressValue }) => {
   return (
     <Card
       className="text-center mt-4"
@@ -30,7 +30,7 @@ const ExCard = ({ imageSrc , text}) => {
           <Col xs={10} className="">
             <ProgressBar
               striped
-              now={60}
+              now={progressValue}
               className="w-100"
               style={{ height: "30px", borderRadius: "20px" }}
             />
@@ -44,16 +44,19 @@ const ExCard = ({ imageSrc , text}) => {
         <Row>
           <Col>
             {" "}
-            <Image src={imageSrc} fluid style={{ maxHeight: "100%" }} />
+            <Image src={imageSrc} fluid style={{ maxHeight: "90%" }} />
           </Col>
           <Col className="d-flex flex-column">
             <Card
-              className="px-5 text-start pt-3 pb-5 border-0 mb-3 customfont"
+              className="px-5 text-start pt-3 pb-5 border-0 mb-3 custom-font"
               style={{ lineHeight: "2.5", borderRadius: "20px" }}
             >
               {text}
             </Card>
-            <Button className="align-self-end mt-auto" style={{ width: "9em" }}>
+            <Button
+              className="align-self-end mt-auto "
+              style={{ width: "9em"}}
+            >
               Next
             </Button>
           </Col>

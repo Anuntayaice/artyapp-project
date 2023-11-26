@@ -14,6 +14,7 @@ const Exercises = () => {
               a sense of wonder. Little did he know that this encounter would
               turn into an extraordinary friendship, filled with exciting
               adventures and heartwarming moments."
+        progressValue={40}
       />
     </div>
   );
