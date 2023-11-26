@@ -1,0 +1,6 @@
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: local('OpenDyslexic'), url('../public/fonts/OpenDyslexic-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
