@@ -12,6 +12,9 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+.customfont {
+  font-family: 'OpenDyslexic', sans-serif;
+}
 
 .App-header {
   background-color: #282c34;

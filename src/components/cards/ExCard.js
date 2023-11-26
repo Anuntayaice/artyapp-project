@@ -48,7 +48,7 @@ const ExCard = ({ imageSrc , text}) => {
           </Col>
           <Col className="d-flex flex-column">
             <Card
-              className="px-5 text-start pt-3 pb-5 border-0 mb-3"
+              className="px-5 text-start pt-3 pb-5 border-0 mb-3 customfont"
               style={{ lineHeight: "2.5", borderRadius: "20px" }}
             >
               {text}
