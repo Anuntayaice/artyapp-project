@@ -1,0 +1,16 @@
+.input {
+  border: none;
+  outline: none;
+  background: none;
+}
+
+/* Apply custom styles for the line appearance */
+.input {
+  border-bottom: 0.5px solid #000; /* You can customize the color */
+  padding: 5px; /* Adjust as needed for spacing */
+}
+
+/* Optional: Add styles for focus state */
+.input:focus {
+  border-bottom: 2px solid #A380D0; /* Change color for focus state */
+}
