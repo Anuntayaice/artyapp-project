@@ -7,6 +7,7 @@ import Exercises from "../../Pages/Exercises";
 import { Image } from "react-bootstrap";
 import { Login } from "../../Pages/Login";
 import { useLocation } from "react-router-dom";
+import ExerciseList from "../../Pages/ExerciseList";
 const MainNavBar = () => {
   const [activeSection, setActiveSection] = useState("home");
   const location = useLocation();
@@ -31,18 +32,18 @@ const MainNavBar = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
             <Nav.Link
-              href="/exercises"
+              href="/exerciselist"
               active={
-                activeSection === "exercises" ||
-                location.pathname === "/exercises"
+                activeSection === "exerciselist" ||
+                location.pathname === "/exerciselist"
               }
-              onClick={() => handleNavClick("exercises")}
+              onClick={() => handleNavClick("exerciselist")}
               style={{
                 color: "white",
                 fontSize: "1.5em",
                 borderBottom:
-                  activeSection === "exercises" ||
-                  location.pathname === "/exercises"
+                  activeSection === "exerciselist" ||
+                  location.pathname === "/exerciselist"
                     ? "5px solid white"
                     : "none",
                 borderRadius: "7px",
@@ -115,6 +116,7 @@ const MainNavBar = () => {
       </Navbar>
 
       {activeSection === "exercises" && <Exercises />}
+      {activeSection === "exerciselist" && <ExerciseList />}
       {activeSection === "login" && <Login />}
       {activeSection === "ptogress" && <Progress />}
     </div>
