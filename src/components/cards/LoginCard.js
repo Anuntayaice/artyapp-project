@@ -13,7 +13,7 @@ const LoginCard = () => {
   return (
     <div>
       {" "}
-      <Card className=" " style={{ maxWidth: "64rem", borderRadius: "16px" }}>
+      <Card className="mt-5 " style={{ maxWidth: "64rem", borderRadius: "16px" }}>
         <Row className="">
           <Col>
             {" "}
