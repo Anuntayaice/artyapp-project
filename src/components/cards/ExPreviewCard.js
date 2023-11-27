@@ -1,14 +1,14 @@
 import React from "react";
-import { Image, Card, Button, Row, Col , Link} from "react-bootstrap";
+import { Image, Card, Button, Row, Col } from "react-bootstrap";
 
 const ExPreviewCard = ({ title, time, level, img, status }) => {
-  const isClickable = status === "start";
+  const isClickable = status === "START";
   const buttonVariant = isClickable ? "success" : "danger";
   const backgroundColor = isClickable ? "" : "rgba(255, 255, 255, 0.5)"; 
 
   const handleClick = () => {
     if (isClickable) {
-      window.location.href = "/exercises"; // Change the path to your login page
+      window.location.href = "/exercises";
     }
   };
   return (

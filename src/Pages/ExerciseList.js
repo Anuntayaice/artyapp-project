@@ -12,7 +12,7 @@ const ExerciseList = () => {
       time: "10 minutes",
       level: "beginner",
       img: "details1.png",
-      status: "start",
+      status: "START",
     },
     {
       id: 2,
@@ -20,7 +20,7 @@ const ExerciseList = () => {
       time: "15 minutes",
       level: "intermediate",
       img: "details2.png",
-      status: "locked",
+      status: "LOCKED",
     },
     {
       id: 3,
@@ -28,7 +28,7 @@ const ExerciseList = () => {
       time: "12 minutes",
       level: "beginner",
       img: "details3.png",
-      status: "locked",
+      status: "LOCKED",
     },
   ];
   const handleItemClick = (item) => {
