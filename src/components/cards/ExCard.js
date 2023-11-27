@@ -1,12 +1,26 @@
 import React from "react";
 import { Card, Button, Row, Col, Image } from "react-bootstrap";
 import ProgressBar from "react-bootstrap/ProgressBar";
-const ExCard = ({ imageSrc, text, progressValue }) => {
+import { useState } from "react";
+const ExCard = ({ imageSrc, textSets }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [progressValue, setProgressValue] = useState(0);
+
+  const handleNextClick = () => {
+    const newIndex = (currentIndex + 1) % textSets.length;
+
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % textSets.length);
+    const newProgressValue = (newIndex + 1) * (100 / textSets.length);
+
+    setCurrentIndex(newIndex);
+    setProgressValue(newProgressValue);
+  };
+
   return (
     <Card
-      className="text-center mt-4"
+      className="text-center "
       style={{
-        maxWidth: "80rem",
+        width: "80rem",
         minWidth: "75em",
         maxHeight: "45rem",
         borderRadius: "16px",
@@ -15,7 +29,7 @@ const ExCard = ({ imageSrc, text, progressValue }) => {
     >
       <Card.Header
         className="border-0 d-flex justify-content-center align-items-center"
-        style={{ height: "5em" }}
+        style={{ height: "4em" }}
       >
         <Row className="w-100 align-content-center align-items-center flex-fill">
           <Col xs={1} className="text-start px-3">
@@ -46,16 +60,17 @@ const ExCard = ({ imageSrc, text, progressValue }) => {
             {" "}
             <Image src={imageSrc} fluid style={{ maxHeight: "90%" }} />
           </Col>
-          <Col className="d-flex flex-column">
+          <Col className="d-flex flex-column ">
             <Card
-              className="px-5 text-start pt-3 pb-5 border-0 mb-3 custom-font"
+              className="px-5 text-start pt-3 pb-5 border-0 mb-2 custom-font "
               style={{ lineHeight: "2.5", borderRadius: "20px" }}
             >
-              {text}
+              {textSets[currentIndex]}
             </Card>
             <Button
               className="align-self-end mt-auto "
-              style={{ width: "9em"}}
+              style={{ width: "9em" }}
+              onClick={handleNextClick}
             >
               Next
             </Button>
