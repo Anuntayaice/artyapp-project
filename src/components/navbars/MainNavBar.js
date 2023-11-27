@@ -22,7 +22,7 @@ const MainNavBar = () => {
       >
         <Navbar.Brand
           href="/"
-          style={{ color: "white", fontSize: "1.5em" }}
+          style={{ color: "white", fontSize: "1.5em", marginLeft: "1rem" }}
           className="mx-5"
         >
           Your App

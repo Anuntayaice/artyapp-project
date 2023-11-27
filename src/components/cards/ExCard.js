@@ -2,18 +2,23 @@ import React from "react";
 import { Card, Button, Row, Col, Image } from "react-bootstrap";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import { useState } from "react";
+
 const ExCard = ({ imageSrc, textSets }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progressValue, setProgressValue] = useState(0);
+  const [showCongratulations, setShowCongratulations] = useState(false);
 
   const handleNextClick = () => {
     const newIndex = (currentIndex + 1) % textSets.length;
-
     setCurrentIndex((prevIndex) => (prevIndex + 1) % textSets.length);
     const newProgressValue = (newIndex + 1) * (100 / textSets.length);
 
     setCurrentIndex(newIndex);
     setProgressValue(newProgressValue);
+    if (newProgressValue === 100) {
+      // Redirect to the specified page when progress reaches 100
+      setShowCongratulations(true);
+    }
   };
 
   return (
@@ -55,27 +60,35 @@ const ExCard = ({ imageSrc, textSets }) => {
         </Row>
       </Card.Header>
       <Card.Body>
-        <Row>
-          <Col>
-            {" "}
-            <Image src={imageSrc} fluid style={{ maxHeight: "90%" }} />
-          </Col>
-          <Col className="d-flex flex-column ">
-            <Card
-              className="px-5 text-start pt-3 pb-5 border-0 mb-2 custom-font "
-              style={{ lineHeight: "2.5", borderRadius: "20px" }}
-            >
-              {textSets[currentIndex]}
-            </Card>
-            <Button
-              className="align-self-end mt-auto "
-              style={{ width: "9em" }}
-              onClick={handleNextClick}
-            >
-              Next
-            </Button>
-          </Col>
-        </Row>
+        {showCongratulations ? (
+          <div>
+            <h2>Congratulations!</h2>
+            <p>You've completed the exercise.</p>
+            {/* Add any other content or components for congratulations */}
+          </div>
+        ) : (
+          <Row>
+            <Col>
+              {" "}
+              <Image src={imageSrc} fluid style={{ maxHeight: "90%" }} />
+            </Col>
+            <Col className="d-flex flex-column ">
+              <Card
+                className="px-5 text-start pt-3 pb-5 border-0 mb-2 custom-font "
+                style={{ lineHeight: "2.5", borderRadius: "20px" }}
+              >
+                {textSets[currentIndex]}
+              </Card>
+              <Button
+                className="align-self-end mt-auto "
+                style={{ width: "9em" }}
+                onClick={handleNextClick}
+              >
+                Next
+              </Button>
+            </Col>
+          </Row>
+        )}
       </Card.Body>
     </Card>
   );
