@@ -1,0 +1,9 @@
+#### Requirements without Version Specified #### 
+
+openai
+flask
+flask_cors
+flask-apispec
+flask-restful
+gunicorn
+python-dotenv
