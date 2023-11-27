@@ -13,7 +13,7 @@ const LoginCard = () => {
   return (
     <div>
       {" "}
-      <Card className=" " style={{ maxWidth: "64rem", borderRadius: "16px" }}>
+      <Card className="mt-5 " style={{ maxWidth: "64rem", borderRadius: "16px" }}>
         <Row className="">
           <Col>
             {" "}
@@ -22,7 +22,7 @@ const LoginCard = () => {
           <Col className="">
             <div className="px-5 py-5">
               <h1>Login</h1>
-              <h5 className="text-start">Email:</h5>
+              <h5 className="text-start custom-font">Email:</h5>
               <InputGroup className="mb-3">
                 <Form.Control
                   placeholder="Type your email"
@@ -30,7 +30,7 @@ const LoginCard = () => {
                   className="input"
                 />
               </InputGroup>
-              <h5 className="text-start">Password:</h5>
+              <h5 className="text-start custom-font">Password:</h5>
               <InputGroup className="mb-3">
                 <Form.Control
                   placeholder="Type your password"
@@ -47,7 +47,7 @@ const LoginCard = () => {
               </div>
               <div className="flex">
                 {" "}
-                <h6>
+                <h6 className="custom-font"> 
                   <span>Don’t have an account? </span>
                   <span style={{ color: "#FF5757" }}>SIGN UP</span>
                 </h6>
