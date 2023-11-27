@@ -16,7 +16,6 @@ const ExCard = ({ imageSrc, textSets }) => {
     setCurrentIndex(newIndex);
     setProgressValue(newProgressValue);
     if (newProgressValue === 100) {
-      // Redirect to the specified page when progress reaches 100
       setShowCongratulations(true);
     }
   };
@@ -61,10 +60,25 @@ const ExCard = ({ imageSrc, textSets }) => {
       </Card.Header>
       <Card.Body>
         {showCongratulations ? (
-          <div>
-            <h2>Congratulations!</h2>
-            <p>You've completed the exercise.</p>
-            {/* Add any other content or components for congratulations */}
+          <div className="d-flex flex-column justify-content-center align-items-center custom-font">
+            <Image
+              src="bigmedal.png"
+              className="my-5"
+              style={{ maxWidth: "13em" }}
+            />
+            <div className="w-50">
+              {" "}
+              <h4 style={{ lineHeight: "2em" }}>
+                Congratulations! You have just received your first badge! Click
+                here to see all your badges or move on to the next exersize
+              </h4>
+            </div>
+            <Button
+              className="my-4"
+              style={{ width: "15em", fontSize: "1.5em" }}
+            >
+              Next Exercise
+            </Button>
           </div>
         ) : (
           <Row>
@@ -72,13 +86,17 @@ const ExCard = ({ imageSrc, textSets }) => {
               {" "}
               <Image src={imageSrc} fluid style={{ maxHeight: "90%" }} />
             </Col>
-            <Col className="d-flex flex-column ">
-              <Card
-                className="px-5 text-start pt-3 pb-5 border-0 mb-2 custom-font "
-                style={{ lineHeight: "2.5", borderRadius: "20px" }}
-              >
-                {textSets[currentIndex]}
-              </Card>
+            <Col className="d-flex flex-column justify-content-center align-items-center custom-font">
+              {" "}
+              <div className="align-self-center">
+                {" "}
+                <Card
+                  className="px-5 text-start pt-3 pb-5 border-0 mb-2 "
+                  style={{ lineHeight: "2.5", borderRadius: "20px" }}
+                >
+                  {textSets[currentIndex]}
+                </Card>
+              </div>
               <Button
                 className="align-self-end mt-auto "
                 style={{ width: "9em" }}
