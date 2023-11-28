@@ -217,17 +217,7 @@ class OpenAI(Exercise):
             input=text,
         )
 
-        # Convert the binary response content to a byte stream
-        byte_stream = io.BytesIO(response.content)
+        # convert the binary data into a StringIO object
+        answer = io.BytesIO(response.content)
 
-        data, samplerate = soundfile.read(byte_stream)
-
-        # Convert the byte stream to a .wav file
-        soundfile.write("output.wav", data, samplerate, format="wav")
-
-        return {
-            "content": {
-                "audio": json.dumps(data.tolist()),
-                "samplerate": samplerate
-            }
-        }
+        return answer

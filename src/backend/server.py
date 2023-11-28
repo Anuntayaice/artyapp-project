@@ -1,29 +1,21 @@
-from flask import Flask  # , request
-from flask_restful import Resource, Api, fields
-from flask_cors import CORS, cross_origin
-# import speechsdk from azure.cognitiveservices.speech
-
-from flask_apispec import marshal_with, doc, use_kwargs
-from flask_apispec.views import MethodResource
-from marshmallow import Schema, fields
-
+from flask import Flask, request, jsonify, make_response
+from flask_cors import CORS
+from profile_handler import ProfileHandler
 from apispec import APISpec
-from apispec.ext.marshmallow import MarshmallowPlugin
-from flask_apispec.extension import FlaskApiSpec
+import os
 
 from apis.openai import OpenAI
 from apis.azure import Azure
 
-from profile_handler import ProfileHandler
-
 app = Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 profile_handler = ProfileHandler()
 
 app.config.update({
     'APISPEC_SPEC': APISpec(
         title='descrAIbe',
         version='v1',
-        plugins=[MarshmallowPlugin()],
+        plugins=[],
         openapi_version='2.0.0'
     ),
     'APISPEC_SWAGGER_URL': '/swagger/',  # URI to access API Doc JSON
@@ -31,212 +23,115 @@ app.config.update({
 })
 
 
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
-api = Api(app)  # Flask restful wraps Flask app around it.
-docs = FlaskApiSpec(app)
+@app.route('/', methods=['GET'])
+def get_status():
+    return jsonify({'status': 'Up and running!'})
 
 
-class StatusResource(MethodResource, Resource):
-
-    class StatusRequestSchema(Schema):
-        status = fields.Str(dump_default='Up and running!')
-
-    @doc(description='API Status', tags=['Status'])
-    @marshal_with(StatusRequestSchema)  # marshalling
-    def get(self):
-        return {'status': 'Up and running!'}
-
-
-class ProfileResource(MethodResource, Resource):
-
-    class ProfileRequestSchema(Schema):
-        _id = fields.Str()
-        name = fields.Str(required=True)
-        interests = fields.List(
-            cls_or_instance=fields.Str, required=False)
-        other_properties = fields.List(
-            cls_or_instance=fields.Str, required=False)
-
-    class ProfileDeleteRequestSchema(Schema):
-        _id = fields.Str(required=True)
-
-    class ProfileGetResponseSchema(Schema):
-        profiles = fields.List(cls_or_instance=fields.Dict)
-
-    class ProfilePostResponseSchema(Schema):
-        status = fields.Str(dump_default='Success')
-        profile = fields.Dict(required=False)
-
-    @doc(description='Adds a new or updates an existing profile.', tags=['Profile'])
-    @use_kwargs(ProfileRequestSchema, location=('json'))
-    @marshal_with(ProfilePostResponseSchema)  # marshalling
-    def post(self, **kwargs):
-        print(kwargs)
-        return profile_handler.add_or_update_profile(kwargs)
-
-    @doc(description='Retrieves all existing profiles', tags=['Profile'])
-    @marshal_with(ProfileGetResponseSchema)  # marshalling
-    def get(self):
-        return {
-            "profiles": profile_handler.get_profiles()
-        }
-
-    @doc(description='Removes a specific profile', tags=['Profile'])
-    @use_kwargs(ProfileDeleteRequestSchema, location=('json'))
-    @marshal_with(ProfilePostResponseSchema)  # marshalling
-    def delete(self,  **kwargs):
-        return profile_handler.delete_profile(kwargs.get('_id'))
+@app.route('/profile', methods=['GET', 'POST', 'DELETE'])
+def profile():
+    kwargs = request.get_json(force=True)
+    if request.method == 'POST':
+        return jsonify(profile_handler.add_or_update_profile(kwargs))
+    elif request.method == 'GET':
+        return jsonify({"profiles": profile_handler.get_profiles()})
+    elif request.method == 'DELETE':
+        return jsonify(profile_handler.delete_profile(kwargs['_id']))
 
 
-class ExerciseResource(MethodResource, Resource):
+@app.route('/gen_exercise', methods=['POST'])
+def gen_exercise():
+    if request.method != 'POST':
+        return jsonify({'error': 'Invalid request method.'})
 
-    class ExerciseRequestSchema(Schema):
-        type_of_exercise = fields.Str(required=True)
-        profile = fields.Str(required=False)
+    kwargs = request.get_json(force=True)
+    type_of_exercise = kwargs.get("type_of_exercise")
+    profile = kwargs.get("profile")
 
-    class ExerciseResponseSchema(Schema):
-        status = fields.Str(dump_default='Success')
-        content = fields.Dict(dump_default="No content.")
-        error = fields.Str(dump_default='No error.')
+    if profile:
+        profile = profile_handler.get_profile(kwargs.get("profile"))
+    else:
+        profile = {}
 
-    @doc(description='Generates and retrieves an exercise.', tags=['Exercise'])
-    @use_kwargs(ExerciseRequestSchema, location=('json'))
-    @marshal_with(ExerciseResponseSchema)  # marshalling
-    def post(self, **kwargs):
-        type_of_exercise = kwargs.get("type_of_exercise")
-        profile = kwargs.get("profile")
+    print(type_of_exercise, profile)
 
-        if profile:
-            profile = profile_handler.get_profile(kwargs.get("profile"))
-        else:
-            profile = {}
-
-        print(type_of_exercise, profile)
-
-        openai = OpenAI(type_of_exercise, profile)
-        answer = openai.gen_exercise()
-        return answer
+    openai = OpenAI(type_of_exercise, profile)
+    answer = openai.gen_exercise()
+    return answer
 
 
-class DescriptionExerciseResource(MethodResource, Resource):
+@app.route('/gen_description_exercise', methods=['POST'])
+def gen_description_exercise():
+    if request.method != 'POST':
+        return jsonify({'error': 'Invalid request method.'})
 
-    class DescriptionExerciseRequestSchema(Schema):
-        profile = fields.Str(required=False)
+    kwargs = request.get_json(force=True)
+    profile = kwargs.get("profile")
 
-    class DescriptionExerciseResponseSchema(Schema):
-        status = fields.Str(dump_default='Success')
-        content = fields.Dict(dump_default="No content.")
-        error = fields.Str(dump_default='No error.')
+    if profile:
+        profile = profile_handler.get_profile(kwargs.get("profile"))
+    else:
+        profile = {}
 
-    @doc(description='Generates and retrieves a description exercise.', tags=['Exercise'])
-    @use_kwargs(DescriptionExerciseRequestSchema, location=('json'))
-    @marshal_with(DescriptionExerciseResponseSchema)  # marshalling
-    def post(self, **kwargs):
-        profile = kwargs.get("profile")
+    print(profile)
 
-        if profile:
-            profile = profile_handler.get_profile(kwargs.get("profile"))
-        else:
-            profile = {}
-
-        print(profile)
-
-        openai = OpenAI(profile)
-        answer = openai.gen_image_description_exercise()
-        return answer
+    openai = OpenAI(profile)
+    answer = openai.gen_image_description_exercise()
+    return answer
 
 
-class ImageResource(MethodResource, Resource):
+@app.route('/gen_image', methods=['POST'])
+def gen_image():
+    if request.method != 'POST':
+        return jsonify({'error': 'Invalid request method.'})
 
-    class ImageRequestSchema(Schema):
-        text = fields.Str(required=True)
+    kwargs = request.get_json(force=True)
+    text = kwargs.get("text")
 
-    class ImageResponseSchema(Schema):
-        status = fields.Str(dump_default='Success')
-        content = fields.Dict(dump_default="No content.")
-        error = fields.Str(dump_default='No error.')
-
-    @doc(description='Generates audio from prompt.', tags=['Exercise'])
-    @use_kwargs(ImageRequestSchema, location=('json'))
-    @marshal_with(ImageResponseSchema)  # marshalling
-    def post(self, **kwargs):
-        text = kwargs.get("text")
-
-        print(text)
-
-        answer = OpenAI.gen_dalle(text)
-        return answer
+    answer = OpenAI.gen_dalle(text)
+    return answer
 
 
-class AudioResource(MethodResource, Resource):
+@app.route('/gen_audio', methods=['POST'])
+def gen_audio():
+    if request.method != 'POST':
+        return jsonify({'error': 'Invalid request method.'})
 
-    class AudioRequestSchema(Schema):
-        text = fields.Str(required=True)
+    kwargs = request.get_json(force=True)
+    text = kwargs.get("text")
 
-    class AudioResponseSchema(Schema):
-        status = fields.Str(dump_default='Success')
-        content = fields.Dict(dump_default="No content.")
-        error = fields.Str(dump_default='No error.')
+    answer = OpenAI.gen_audio(text)
 
-    @doc(description='Generates audio from prompt.', tags=['Exercise'])
-    @use_kwargs(AudioRequestSchema, location=('json'))
-    @marshal_with(AudioResponseSchema)  # marshalling
-    def post(self, **kwargs):
-        text = kwargs.get("text")
+    response = make_response(answer.getvalue())
+    answer.close()
+    response.headers['Content-Type'] = 'audio/wav'
+    response.headers['Content-Disposition'] = 'attachment; filename=sound.wav'
 
-        print(text)
-
-        answer = OpenAI.gen_audio(text)
-        return answer
+    return response
 
 
-class AudioAssessmentResource(MethodResource, Resource):
+@app.route('/gen_audio_assessment', methods=['POST'])
+def gen_audio_assessment():
+    if request.method != 'POST':
+        return jsonify({'error': 'Invalid request method.'})
 
-    class AudioAssessmentRequestSchema(Schema):
-        text = fields.Str(required=True)
-        audio = fields.Str(required=True)
+    text = request.form.get('text')
+    audio = request.files.get('audio')
+    audio_filename = f'{audio.filename}-assessment'
 
-    class AudioAssessmentResponseSchema(Schema):
-        status = fields.Str(dump_default='Success')
-        content = fields.Dict(dump_default="No content.")
-        error = fields.Str(dump_default='No error.')
+    audio.save(audio_filename)
 
-    @doc(description='Assesses the correctness of the pronunciation of the audio.', tags=['Exercise'])
-    @use_kwargs(AudioAssessmentRequestSchema, location=('json'))
-    @marshal_with(AudioAssessmentResponseSchema)  # marshalling
-    def post(self, **kwargs):
-        text = kwargs.get("text")
-        audio = kwargs.get("audio")
+    azure = Azure()
 
-        azure = Azure()
+    answer = azure.pronunciation_assessment_continuous_from_file(
+        text, audio_filename)
 
-        answer = azure.pronunciation_assessment_continuous_from_file(
-            text, audio)
-        return {
-            'content': answer
-        }
+    os.remove(audio_filename)
 
+    return {
+        'content': answer
+    }
 
-api.add_resource(StatusResource, '/')
-docs.register(StatusResource)
-
-api.add_resource(DescriptionExerciseResource, '/gen_description_exercise')
-docs.register(DescriptionExerciseResource)
-
-api.add_resource(ExerciseResource, '/gen_exercise')
-docs.register(ExerciseResource)
-
-api.add_resource(ImageResource, '/gen_image')
-docs.register(ImageResource)
-
-api.add_resource(AudioResource, '/gen_audio')
-docs.register(AudioResource)
-
-api.add_resource(AudioAssessmentResource, '/get_audio_assessment')
-docs.register(AudioAssessmentResource)
-
-api.add_resource(ProfileResource, '/profile')
-docs.register(ProfileResource)
 
 if __name__ == "__main__":
     app.run(debug=True)

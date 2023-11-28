@@ -13,15 +13,14 @@ class Azure(Exercise):
         self.speech_config.speech_recognition_language = os.getenv(
             'AZURE_LANG')
 
-    def pronunciation_assessment_continuous_from_file(self, reference_text, file_name):
+    def pronunciation_assessment_continuous_from_file(self, reference_text, audio):
         pronunciation_config = speechsdk.PronunciationAssessmentConfig(
             reference_text=reference_text,
             grading_system=speechsdk.PronunciationAssessmentGradingSystem.HundredMark,
             granularity=speechsdk.PronunciationAssessmentGranularity.Phoneme,
             enable_miscue=True)
 
-        audio_config = speechsdk.audio.AudioConfig(
-            filename="record.wav")
+        audio_config = speechsdk.audio.AudioConfig(filename=audio)
 
         speech_recognizer = speechsdk.SpeechRecognizer(
             speech_config=self.speech_config,
