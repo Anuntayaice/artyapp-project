@@ -3,6 +3,9 @@ from flask_cors import CORS
 from profile_handler import ProfileHandler
 from apispec import APISpec
 import os
+import soundfile
+import io
+import urllib.request
 
 from apis.openai import OpenAI
 from apis.azure import Azure
@@ -117,16 +120,19 @@ def gen_audio_assessment():
 
     text = request.form.get('text')
     audio = request.files.get('audio')
-    audio_filename = f'{audio.filename}-assessment'
 
-    audio.save(audio_filename)
+    # read the ogg audio file with soundfile
+    data, samplerate = soundfile.read(audio)
+    filename = audio.filename
+    # convert to wav
+    soundfile.write(filename, data, samplerate, subtype='PCM_16', format='wav')
 
     azure = Azure()
 
     answer = azure.pronunciation_assessment_continuous_from_file(
-        text, audio_filename)
+        text, filename)
 
-    os.remove(audio_filename)
+    os.remove(audio.filename)
 
     return {
         'content': answer
@@ -134,4 +140,4 @@ def gen_audio_assessment():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
