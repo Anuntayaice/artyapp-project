@@ -6,7 +6,7 @@ import { Image } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 
-const MainNavBar = () => {
+const TherapistNavBar = () => {
   const [activeSection, setActiveSection] = useState("home");
   const location = useLocation();
   const handleNavClick = (section) => {
@@ -14,36 +14,42 @@ const MainNavBar = () => {
   };
   return (
     <div>
-      <Navbar className="bg-secondary custom-font " style={{ height: "8em" }}>
+      <Navbar
+        className="bg-black custom-font "
+        style={{
+          height: "8em",
+          background: "linear-gradient(to top,#999292, #999292)",
+        }}
+      >
         <Container>
           <Navbar.Brand href="/">
             <Image
               src="/images/artyIcon.png"
               style={{ maxWidth: "9em" }}
-              className=" mx-5"
+              className="my-0 mx-5"
             />
           </Navbar.Brand>{" "}
           <Navbar.Brand
-            href="/mainexercise"
+            href="/therapist-patientlist"
             active={
-              activeSection === "mainexercise" ||
-              location.pathname === "/mainexercise"
+              activeSection === "therapist-patientlist" ||
+              location.pathname === "/therapist-patientlist"
             }
-            onClick={() => handleNavClick("mainexercise")}
+            onClick={() => handleNavClick("therapist-patientlist")}
             style={{
               color: "white",
               fontSize: "1.5em",
               borderBottom:
-                activeSection === "mainexercise" ||
-                location.pathname === "/mainexercise"
+                activeSection === "therapist-patientlist" ||
+                location.pathname === "/therapist-patientlist"
                   ? "5px solid white"
                   : "none",
               borderRadius: "7px",
-              transition: "border-bottom 0.4s ease-in-out", // Add a smooth transition
+              transition: "border-bottom 0.4s ease-in-out",
             }}
             className="mx-5"
           >
-            Exercise
+            Patients
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">
@@ -62,4 +68,4 @@ const MainNavBar = () => {
   );
 };
 
-export default MainNavBar;
+export default TherapistNavBar;
