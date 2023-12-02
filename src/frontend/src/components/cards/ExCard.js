@@ -11,7 +11,10 @@ const ExCard = ({ imageSrc, textSets }) => {
   const [progressValue, setProgressValue] = useState(0);
   const [showCongratulations, setShowCongratulations] = useState(false);
 
-  
+  const handleClick = () => {
+    window.location.href = "/exerciselist";
+  };
+
   const handleNextClick = () => {
     const newIndex = (currentIndex + 1) % textSets.length;
     const newProgressValue = (newIndex + 1) * (100 / textSets.length);
@@ -80,7 +83,7 @@ const ExCard = ({ imageSrc, textSets }) => {
       .catch(error => {
         console.log(error);
       });
-  }, [currentIndex]);
+  }, [textSets, loading, currentIndex]);
 
 
   return (
@@ -104,6 +107,7 @@ const ExCard = ({ imageSrc, textSets }) => {
               variant="link"
               className="text-white text-decoration-none "
               style={{ fontSize: "2em" }}
+              onClick={handleClick}
             >
               X
             </Button>
