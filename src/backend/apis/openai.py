@@ -2,9 +2,9 @@ from .exercise import Exercise
 import os
 from openai import OpenAI as Client
 from dotenv import load_dotenv
-import soundfile
 import io
-import json
+import time
+import requests
 
 REASON_EXPLANATION = {
     "stop": "The model reached the end of the prompt.",
@@ -101,7 +101,18 @@ class OpenAI(Exercise):
         # check if there was an error
         print(res)
         if 'error' in res.keys():
-            return res
+            # wait for 1min and try again
+            num_tries = 0
+            while num_tries < 3:
+                time.sleep(30)
+                res = self.gen_gpt(prompt, self.client, None)
+                if 'error' in res.keys():
+                    num_tries += 1
+                else:
+                    break
+
+            if num_tries == 3:
+                return res
 
         content = res['content']
         print(content)
@@ -114,9 +125,49 @@ class OpenAI(Exercise):
         compound_nouns = content.split('COMPOUND NOUNS:\n')[1].split('\n')
 
         image = self.gen_dalle(description, self.client)
-        print(image)
+
         if 'error' in image.keys():
-            return image
+            # wait for 1min and try again
+            num_tries = 0
+            while num_tries < 3:
+                time.sleep(30)
+                res = self.gen_gpt(prompt, self.client, None)
+                if 'error' in res.keys():
+                    num_tries += 1
+                else:
+                    break
+
+            if num_tries == 3:
+                return res
+
+        # get the id of the exercise
+        exercise_id = len(os.listdir('exercises')) + 1
+        exercise_folder = f'exercises/{exercise_id}'
+
+        # create the folder
+        os.mkdir(exercise_folder)
+
+        # save the description
+        with open(f'{exercise_folder}/description.txt', 'w') as f:
+            f.write(description)
+
+        # save the story
+        with open(f'{exercise_folder}/story.txt', 'w') as f:
+            f.write(story)
+
+        # save the phrases
+        with open(f'{exercise_folder}/phrases.txt', 'w') as f:
+            f.write('\n'.join(phrases))
+
+        # save the compound nouns
+        with open(f'{exercise_folder}/compound_nouns.txt', 'w') as f:
+            f.write('\n'.join(compound_nouns))
+
+        # save the image
+        # retrieve the image from the url
+        image_data = requests.get(image['content']['image_url']).content
+        with open(f'{exercise_folder}/image.png', 'wb') as f:
+            f.write(image_data)
 
         return {
             'content': {
@@ -211,13 +262,22 @@ class OpenAI(Exercise):
             client = Client()
             client.api_key = os.getenv("OPENAI_API_KEY")
 
-        response = client.audio.speech.create(
-            model="tts-1",
-            voice="onyx",
-            input=text,
-        )
+        try:
+            response = client.audio.speech.create(
+                model="tts-1",
+                voice="onyx",
+                input=text,
+            )
+
+        except Exception as e:
+            return {
+                "error": "There was an error generating the audio.",
+                "response": e
+            }
 
         # convert the binary data into a StringIO object
         answer = io.BytesIO(response.content)
 
-        return answer
+        return {
+            "data": answer
+        }

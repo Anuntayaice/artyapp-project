@@ -4,8 +4,8 @@ from profile_handler import ProfileHandler
 from apispec import APISpec
 import os
 import soundfile
-import io
-import urllib.request
+import shutil
+import time
 
 from apis.openai import OpenAI
 from apis.azure import Azure
@@ -105,12 +105,96 @@ def gen_audio():
 
     answer = OpenAI.gen_audio(text)
 
-    response = make_response(answer.getvalue())
+    response = make_response(answer['data'].getvalue())
     answer.close()
     response.headers['Content-Type'] = 'audio/wav'
     response.headers['Content-Disposition'] = 'attachment; filename=sound.wav'
 
     return response
+
+
+@app.route('/gen_audios_for_exercise', methods=['POST'])
+def gen_audios_for_exercise():
+    if request.method != 'POST':
+        return jsonify({'error': 'Invalid request method.'})
+
+    kwargs = request.get_json(force=True)
+    exercise_id = kwargs.get("exercise_id")
+
+    # check that the exercise exists in the exercises collection
+    if not os.path.exists(f'exercises/{exercise_id}'):
+        return jsonify({'error': 'Exercise does not exist.'})
+
+    # get the exercise phrases and compound nouns
+    phrases = []
+    compound_nouns = []
+    with open(f'exercises/{exercise_id}/phrases.txt', 'r') as f:
+        phrases = f.readlines()
+    with open(f'exercises/{exercise_id}/compound_nouns.txt', 'r') as f:
+        compound_nouns = f.readlines()
+
+    # create or replace the audios folder
+    if os.path.exists(f'exercises/{exercise_id}/audios'):
+        shutil.rmtree(f'exercises/{exercise_id}/audios')
+    os.mkdir(f'exercises/{exercise_id}/audios')
+
+    # create the phrases and compound_nouns folders
+    os.mkdir(f'exercises/{exercise_id}/audios/phrases')
+    os.mkdir(f'exercises/{exercise_id}/audios/compound_nouns')
+
+    # get the audio for each phrase
+    for i, phrase in enumerate(phrases):
+        # check that the audio doesn't start with a number
+        if phrase[0].isdigit():
+            phrase = phrase[2:]
+
+        phrase = phrase.strip()
+        audio = OpenAI.gen_audio(phrase)
+
+        if 'error' in audio.keys():
+            # wait for 1min and try again
+            num_tries = 0
+            while num_tries < 3:
+                time.sleep(15)
+                audio = OpenAI.gen_audio(phrase)
+                if 'error' in audio.keys():
+                    num_tries += 1
+                else:
+                    break
+
+            if num_tries == 3:
+                return jsonify({'error': 'Error generating audios.', 'audio': audio})
+
+        with open(f'exercises/{exercise_id}/audios/phrases/{i + 1}.wav', 'wb') as f:
+            f.write(audio['data'].getvalue())
+
+    # get the audio for each compound noun
+    for i, noun in enumerate(compound_nouns):
+        # check that the audio doesn't start with a number
+        if noun[0].isdigit():
+            noun = noun[2:]
+
+        noun = noun.strip()
+        audio = OpenAI.gen_audio(noun)
+
+        if 'error' in audio.keys():
+            # wait for 1min and try again
+            num_tries = 0
+            while num_tries < 3:
+                time.sleep(15)
+                audio = OpenAI.gen_audio(noun)
+                if 'error' in audio.keys():
+                    num_tries += 1
+                else:
+                    break
+
+            if num_tries == 3:
+                return jsonify({'error': 'Error generating audios.', 'audio': audio})
+
+        with open(f'exercises/{exercise_id}/audios/compound_nouns/{i + 1}.wav', 'wb') as f:
+            f.write(audio['data'].getvalue())
+
+    return jsonify({'content': 'Audios generated successfully.'})
 
 
 @app.route('/gen_audio_assessment', methods=['POST'])
