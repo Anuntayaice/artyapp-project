@@ -45,7 +45,7 @@ const LoginCard = () => {
       <Card className="" style={{ maxWidth: "64rem", borderRadius: "16px" }}>
         <Row className="">
           <Col>
-            <Image src="loginpic.png" fluid style={{ borderRadius: "16px" }} />
+            <Image src="/images/loginpic.png" fluid style={{ borderRadius: "16px" }} />
           </Col>
           <Col>
             <div className="px-5 py-5">

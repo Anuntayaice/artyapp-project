@@ -3,7 +3,7 @@ import { Card, Button, Row, Col, Image } from "react-bootstrap";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import { useState } from "react";
 
-const ExCard = ({ imageSrc, textSets }) => {
+const SampleExCard = ({ imageSrc, textSets }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progressValue, setProgressValue] = useState(0);
   const [showCongratulations, setShowCongratulations] = useState(false);
@@ -59,7 +59,7 @@ const ExCard = ({ imageSrc, textSets }) => {
             />
           </Col>
           <Col xs={1} className="px-3">
-            <Image src="medal.png" />
+            <Image src="/images/medal.png" />
           </Col>
         </Row>
       </Card.Header>
@@ -67,7 +67,7 @@ const ExCard = ({ imageSrc, textSets }) => {
         {showCongratulations ? (
           <div className="d-flex flex-column justify-content-center align-items-center custom-font">
             <Image
-              src="bigmedal.png"
+              src="/images/bigmedal.png"
               className="my-5"
               style={{ maxWidth: "13em" }}
             />
@@ -117,4 +117,4 @@ const ExCard = ({ imageSrc, textSets }) => {
   );
 };
 
-export default ExCard;
+export default SampleExCard;

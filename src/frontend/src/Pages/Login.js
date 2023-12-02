@@ -5,7 +5,7 @@ export const Login = () => {
   return (
     <div className="bg-secondary d-flex flex-column align-items-center justify-content-center vh-100">
       <Image
-        src="artyIcon.png"
+        src="/images/artyIcon.png"
         fluid
         style={{
           maxWidth: "12em",

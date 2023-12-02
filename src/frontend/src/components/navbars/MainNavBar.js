@@ -16,7 +16,7 @@ const MainNavBar = () => {
     <div>
       <Navbar className="bg-secondary custom-font " style={{ height: "8em" }}>
         <Container>
-          <Navbar.Brand href="/"><Image src='artyIcon.png' style={{maxWidth : '9em'}} className='my-4 mx-5'/></Navbar.Brand>{" "}
+          <Navbar.Brand href="/"><Image src='/images/artyIcon.png' style={{maxWidth : '9em'}} className='my-4 mx-5'/></Navbar.Brand>{" "}
           <Navbar.Brand
             href="/mainexercise"
             active={
@@ -47,7 +47,7 @@ const MainNavBar = () => {
               active={activeSection === "login"}
               onClick={() => handleNavClick("login")}
             >
-              <Image src="usericon.png" />
+              <Image src="/images/usericon.png" />
             </Nav.Link>
           </Navbar.Collapse>
         </Container>

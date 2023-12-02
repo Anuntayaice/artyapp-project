@@ -33,7 +33,7 @@ const ExPreviewCard = ({ title, time, level, img, status }) => {
           </Col>
           <Col lg={12} className="border-bottom d-inline-block mb-2">
             {" "}
-            <Image src="medal.png" style={{ maxWidth: "1.5em" }} />
+            <Image src="/images/medal.png" style={{ maxWidth: "1.5em" }} />
           </Col>
         </Row>
       </Card.Body>
