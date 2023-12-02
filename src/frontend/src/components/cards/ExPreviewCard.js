@@ -8,7 +8,7 @@ const ExPreviewCard = ({ title, time, level, img, status }) => {
 
   const handleClick = () => {
     if (isClickable) {
-      window.location.href = "/exercises";
+      window.location.href = "/sampleexercise";
     }
   };
   return (

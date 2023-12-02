@@ -30,7 +30,7 @@ const ExCard = ({ imageSrc, textSets }) => {
       style={{
         width: "80rem",
         minWidth: "75em",
-        maxHeight: "45rem",
+        maxHeight: "42rem",
         borderRadius: "16px",
         backgroundColor: "rgba(232, 230, 230, 0.2)",
       }}
@@ -89,9 +89,9 @@ const ExCard = ({ imageSrc, textSets }) => {
           <Row>
             <Col>
               {" "}
-              <Image src={imageSrc} fluid style={{ maxHeight: "90%" }} />
+              <Image src={imageSrc} fluid style={{ maxHeight: "90%"}} />
             </Col>
-            <Col className="d-flex flex-column justify-content-center align-items-center custom-font">
+            <Col className="d-flex flex-column justify-content-center align-items-center custom-font ">
               {" "}
               <div className="align-self-center">
                 {" "}
@@ -103,7 +103,7 @@ const ExCard = ({ imageSrc, textSets }) => {
                 </Card>
               </div>
               <Button
-                className="align-self-end mt-auto "
+                className="align-self-end mt-auto mb-5"
                 style={{ width: "9em" }}
                 onClick={handleNextClick}
               >

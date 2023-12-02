@@ -14,22 +14,22 @@ const MainNavBar = () => {
   };
   return (
     <div>
-      <Navbar className="bg-secondary custom-font " style={{ height: "6.5em" }}>
+      <Navbar className="bg-secondary custom-font " style={{ height: "8em" }}>
         <Container>
-          <Navbar.Brand href="/"><Image src='artyIcon.png' style={{maxWidth : '15em'}} className='mb-3'/></Navbar.Brand>{" "}
+          <Navbar.Brand href="/"><Image src='artyIcon.png' style={{maxWidth : '9em'}} className='my-4 mx-5'/></Navbar.Brand>{" "}
           <Navbar.Brand
-            href="/exerciselist"
+            href="/mainexercise"
             active={
-              activeSection === "exerciselist" ||
-              location.pathname === "/exerciselist"
+              activeSection === "mainexercise" ||
+              location.pathname === "/mainexercise"
             }
-            onClick={() => handleNavClick("exerciselist")}
+            onClick={() => handleNavClick("mainexercise")}
             style={{
               color: "white",
               fontSize: "1.5em",
               borderBottom:
-                activeSection === "exerciselist" ||
-                location.pathname === "/exerciselist"
+                activeSection === "mainexercise" ||
+                location.pathname === "/mainexercise"
                   ? "5px solid white"
                   : "none",
               borderRadius: "7px",
@@ -38,47 +38,6 @@ const MainNavBar = () => {
             className="mx-5"
           >
             Exercise
-          </Navbar.Brand>
-          <Navbar.Brand
-            href="/progress"
-            active={
-              activeSection === "progress" || location.pathname === "/progress"
-            }
-            onClick={() => handleNavClick("progress")}
-            style={{
-              color: "white",
-              fontSize: "1.5em",
-              borderBottom:
-                activeSection === "progress" ||
-                location.pathname === "/progress"
-                  ? "5px solid white"
-                  : "none",
-              borderRadius: "7px",
-              transition: "border-bottom 0.4s ease-in-out", // Add a smooth transition
-            }}
-            className="mx-5"
-          >
-            Progress
-          </Navbar.Brand>
-          <Navbar.Brand
-            href="/"
-            style={{
-              color: "white",
-              fontSize: "1.5em",
-            }}
-            className="mx-5"
-          >
-            Badges
-          </Navbar.Brand>
-          <Navbar.Brand
-            href="/"
-            style={{
-              color: "white",
-              fontSize: "1.5em",
-            }}
-            className="mx-5"
-          >
-            Lorem
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">
