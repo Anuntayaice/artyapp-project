@@ -26,10 +26,8 @@ const Exercises = () => {
     
   }, [exercise, imageSrc]);
 
-  console.log(exercise)
-
   return (
-    <div className="bg-secondary d-flex align-items-start justify-content-center vh-100">
+    <div className="bg-secondary d-flex align-items-start justify-content-center">
       {exercise.length !== 0 && (
         <ExCard imageSrc={imageSrc} exerciseId={exercise_id} exercise={exercise} />
       )}

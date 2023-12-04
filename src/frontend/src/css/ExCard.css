@@ -1,0 +1,21 @@
+.content-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.audio-display-wrapper {
+    margin: 2em;
+}
+
+.text-wrapper {
+    background-color: white;
+    border-radius: 30px;
+    max-height: 75vh;
+    padding: 0em 5em;
+    overflow-y: scroll;
+}
+
+.text-content {
+    line-height: 30px;
+    max-height: 65vh;
+}

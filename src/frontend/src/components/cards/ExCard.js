@@ -2,11 +2,18 @@ import React, { useEffect } from "react";
 import { Card, Button, Row, Col, Image } from "react-bootstrap";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import { useState } from "react";
-import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
+import "../../css/ExCard.css";
+//import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
+import { useReactMediaRecorder } from "react-media-recorder";
+import { ColorRing } from  'react-loader-spinner'
 
 const ExCard = ({ imageSrc, exerciseId, exercise }) => {
   const [audio, setAudio] = useState(undefined);
   const [loading, setLoading] = useState(true);
+  //const [blob, setBlob] = useState(undefined);
+  const [loadingAssessment, setLoadingAssessment] = useState(false);
+  const { status, startRecording, stopRecording, mediaBlobUrl } =
+    useReactMediaRecorder({ audio: true, video: false });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progressValue, setProgressValue] = useState(0);
   const [showCongratulations, setShowCongratulations] = useState(false);
@@ -14,6 +21,8 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
   const handleClick = () => {
     window.location.href = "/exerciselist";
   };
+  
+  //console.log(exercise[currentIndex])
 
   const handleNextClick = () => {
     const newIndex = (currentIndex + 1) % exercise.length;
@@ -30,42 +39,40 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
     setProgressValue(newProgressValue);
   };
 
-  const recorderControls = useAudioRecorder(
-    {
-      noiseSuppression: true,
-      echoCancellation: true,
-    },
-    (err) => console.table(err) // onNotAllowedOrFound
-  );
-
-  const getAssessment = (blob) => {
-    
-    console.log(blob)
-
+  const getAssessment = async (blobURL) => {
     const formData = new FormData();
+    let blob = await fetch(blobURL).then(r => r.blob());
+    console.log('in getAssessment', blobURL)
 
     formData.append("audio", blob, 'audio.wav');
     formData.append("text", exercise[currentIndex]['content']);
-    fetch("http://localhost:5000/gen_audio_assessment", {
+    let response = await fetch("http://localhost:5000/gen_audio_assessment", {
       method: "POST",
       body: formData,
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        const assessment = data['content']['NBest'][0]['PronunciationAssessment'];
-        const accuracy = assessment['AccuracyScore']
-        const fluency = assessment['FluencyScore']
-        const completeness = assessment['CompletenessScore']
-        const pronunciation = assessment['PronScore']
+    
+    let data = await response.json();
+    console.log(data);
 
-        console.log('accuracy: ',accuracy)
-        console.log('fluency: ',fluency)
-        console.log('completeness: ',completeness)
-        console.log('pronunciation: ',pronunciation)
-      })
-      .catch((error) => console.log(error));
+    const assessment = data['content']['NBest'][0]['PronunciationAssessment'];
+    const accuracy = assessment['AccuracyScore']
+    const fluency = assessment['FluencyScore']
+    const completeness = assessment['CompletenessScore']
+    const pronunciation = assessment['PronScore']
+
+    console.log('accuracy: ',accuracy)
+    console.log('fluency: ',fluency)
+    console.log('completeness: ',completeness)
+    console.log('pronunciation: ',pronunciation)
+    setLoadingAssessment(false);
   };
+
+  useEffect(() => {
+    if (!mediaBlobUrl) return;
+
+    setLoadingAssessment(true);
+    getAssessment(mediaBlobUrl);
+  }, [mediaBlobUrl]);
 
   useEffect(() => {
     if (!loading) return;
@@ -88,7 +95,6 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
       style={{
         width: "80rem",
         minWidth: "75em",
-        maxHeight: "45rem",
         borderRadius: "16px",
         backgroundColor: "rgba(232, 230, 230, 0.2)",
       }}
@@ -149,35 +155,40 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
               {" "}
               <Image src={imageSrc} fluid style={{ maxHeight: "90%" }} />
             </Col>
-            <Col className="d-flex flex-column justify-content-center align-items-center custom-font">
+            <Col className="content-col">
               {" "}
-              <div className="align-self-center">
-                {" "}
-                <Card
-                  className="px-5 text-start pt-3 pb-5 border-0 mb-2 "
-                  style={{ lineHeight: "2.5", borderRadius: "20px" }}
-                >
-                  {exercise[currentIndex]['content']}
-                </Card>
-                <div className="audio-controls d-flex justify-content-center align-items-center">
-                { currentIndex !== 0 && (
-                  <AudioRecorder
-                  onRecordingComplete={(blob) => getAssessment(blob)}
-                  recorderControls={recorderControls}
-                  // downloadOnSavePress={true}
-                  downloadFileExtension="wav"
-                  showVisualizer={true}
-                />
-                )}
-                {audio && (
-                    <audio autoplay controls>
+              <div className="align-self-center text-block">
+                <div className="text-wrapper px-5 text-start pt-3 pb-5 border-0 mb-2">
+                  <div className="text-content">
+                    {exercise[currentIndex]['content']}
+                  </div>
+                </div>
+              </div>
+              {audio && (
+                    <audio autoPlay controls>
                       <source src={audio} type="audio/mpeg" />
                     </audio>
                   )}
+              <div className="audio-display-wrapper audio-controls d-flex justify-content-center align-items-center">
+                { exercise[currentIndex]['type'] !== "story" && exercise[currentIndex]['type'] !== "phase" && !loadingAssessment && (
+                  <div>
+                    <p>{status}</p>
+                    <button onClick={startRecording}>Start Recording</button>
+                    <button onClick={stopRecording}>Stop Recording</button>
+                  </div>
+                )}
+                <ColorRing
+                  visible={loadingAssessment}
+                  height="80"
+                  width="80"
+                  ariaLabel="blocks-loading"
+                  wrapperStyle={{}}
+                  wrapperClass="blocks-wrapper"
+                  colors={['bg-primary', 'bg-secondary', 'bg-success', 'bg-danger', 'bg-warning', 'bg-info']}
+                />
                 </div>
-              </div>
               <Button
-                className="align-self-end mt-auto "
+                className="align-self-end"
                 style={{ width: "9em" }}
                 onClick={handleNextClick}
               >
