@@ -10,8 +10,11 @@ import { ColorRing } from  'react-loader-spinner'
 const ExCard = ({ imageSrc, exerciseId, exercise }) => {
   const [audio, setAudio] = useState(undefined);
   const [loading, setLoading] = useState(true);
+  const [canAdvance, setCanAdvance] = useState(false);
+  const [isSpeechExercise, setIsSpeechExercise] = useState(false);
   //const [blob, setBlob] = useState(undefined);
   const [loadingAssessment, setLoadingAssessment] = useState(false);
+  const [text, setText] = useState(undefined);
   const { status, startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({ audio: true, video: false });
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -36,6 +39,8 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
     }
 
     setCurrentIndex(newIndex);
+    setIsSpeechExercise(exercise[newIndex]['type'] !== "story" && exercise[newIndex]['type'] !== "phase");
+    setCanAdvance(false);
     setProgressValue(newProgressValue);
   };
 
@@ -55,15 +60,32 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
     console.log(data);
 
     const assessment = data['content']['NBest'][0]['PronunciationAssessment'];
+    const words = data['content']['NBest'][0]['Words'];
     const accuracy = assessment['AccuracyScore']
     const fluency = assessment['FluencyScore']
     const completeness = assessment['CompletenessScore']
     const pronunciation = assessment['PronScore']
 
+    console.log('words: ',words)
     console.log('accuracy: ',accuracy)
     console.log('fluency: ',fluency)
     console.log('completeness: ',completeness)
     console.log('pronunciation: ',pronunciation)
+
+    let hasFailed = accuracy < 60 || fluency < 60 || completeness < 60 || pronunciation < 60;
+    // change word color of text based on assessment
+    // new_text is a string with html tags
+    let new_text = exercise[currentIndex]['content'].split(' ');
+    for (let i = 0; i < words.length; i++) {
+      if (words[i]['PronunciationAssessment']['AccuracyScore'] < 75) {
+        new_text[i] =`<span style="color:red; cursor:pointer" title="${words[i]['PronunciationAssessment']['ErrorType'] || 'Mispronounciation'}">${new_text[i]}</span>`;
+        hasFailed = true;
+      } else {
+        new_text[i] =`<span style="color:green" title="">${new_text[i]}</span>`;
+      }
+    }
+    setText(new_text.join(' '));
+    setCanAdvance(!hasFailed);
     setLoadingAssessment(false);
   };
 
@@ -81,13 +103,14 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
       }).then(response => response.blob())
       .then(blob => {
         setAudio(URL.createObjectURL(blob));
+        setText(exercise[currentIndex]['content']);
         setLoading(false);
       })
       .catch(error => {
         console.log(error);
       });
   }, [exercise, loading, currentIndex, exerciseId]);
-
+  
 
   return (
     <Card
@@ -159,8 +182,7 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
               {" "}
               <div className="align-self-center text-block">
                 <div className="text-wrapper px-5 text-start pt-3 pb-5 border-0 mb-2">
-                  <div className="text-content">
-                    {exercise[currentIndex]['content']}
+                  <div className="text-content" dangerouslySetInnerHTML={{ __html: text }}>
                   </div>
                 </div>
               </div>
@@ -170,7 +192,7 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
                     </audio>
                   )}
               <div className="audio-display-wrapper audio-controls d-flex justify-content-center align-items-center">
-                { exercise[currentIndex]['type'] !== "story" && exercise[currentIndex]['type'] !== "phase" && !loadingAssessment && (
+                { isSpeechExercise && !loadingAssessment && (
                   <div>
                     <p>{status}</p>
                     <button onClick={startRecording}>Start Recording</button>
@@ -191,6 +213,7 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
                 className="align-self-end"
                 style={{ width: "9em" }}
                 onClick={handleNextClick}
+                disabled={isSpeechExercise && !canAdvance}
               >
                 Next
               </Button>
