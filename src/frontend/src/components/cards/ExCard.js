@@ -4,7 +4,7 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import { useState } from "react";
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
 
-const ExCard = ({ imageSrc, textSets }) => {
+const ExCard = ({ imageSrc, exerciseId, exercise }) => {
   const [audio, setAudio] = useState(undefined);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -16,8 +16,8 @@ const ExCard = ({ imageSrc, textSets }) => {
   };
 
   const handleNextClick = () => {
-    const newIndex = (currentIndex + 1) % textSets.length;
-    const newProgressValue = (newIndex + 1) * (100 / textSets.length);
+    const newIndex = (currentIndex + 1) % exercise.length;
+    const newProgressValue = (newIndex + 1) * (100 / exercise.length);
     
     if (newProgressValue === 100) {
       setShowCongratulations(true);
@@ -45,7 +45,7 @@ const ExCard = ({ imageSrc, textSets }) => {
     const formData = new FormData();
 
     formData.append("audio", blob, 'audio.wav');
-    formData.append("text", textSets[currentIndex]);
+    formData.append("text", exercise[currentIndex]['content']);
     fetch("http://localhost:5000/gen_audio_assessment", {
       method: "POST",
       body: formData,
@@ -69,12 +69,8 @@ const ExCard = ({ imageSrc, textSets }) => {
 
   useEffect(() => {
     if (!loading) return;
-    fetch("http://localhost:5000/gen_audio", {
-      method: "POST",
-      headers: {
-      'Content-Type' : 'application/json'
-      },
-      body: JSON.stringify({text: textSets[currentIndex]})
+    fetch(`http://localhost:5000/get_exercise_audio?exercise_id=${exerciseId}&type_of_audio=${exercise[currentIndex]['type']}&audio_name=${exercise[currentIndex]['audio_name']}`, {
+      method: "GET",
       }).then(response => response.blob())
       .then(blob => {
         setAudio(URL.createObjectURL(blob));
@@ -83,7 +79,7 @@ const ExCard = ({ imageSrc, textSets }) => {
       .catch(error => {
         console.log(error);
       });
-  }, [textSets, loading, currentIndex]);
+  }, [exercise, loading, currentIndex, exerciseId]);
 
 
   return (
@@ -161,10 +157,10 @@ const ExCard = ({ imageSrc, textSets }) => {
                   className="px-5 text-start pt-3 pb-5 border-0 mb-2 "
                   style={{ lineHeight: "2.5", borderRadius: "20px" }}
                 >
-                  {textSets[currentIndex]}
+                  {exercise[currentIndex]['content']}
                 </Card>
                 <div className="audio-controls d-flex justify-content-center align-items-center">
-                { currentIndex != 0 && (
+                { currentIndex !== 0 && (
                   <AudioRecorder
                   onRecordingComplete={(blob) => getAssessment(blob)}
                   recorderControls={recorderControls}
@@ -174,7 +170,7 @@ const ExCard = ({ imageSrc, textSets }) => {
                 />
                 )}
                 {audio && (
-                    <audio controls>
+                    <audio autoplay controls>
                       <source src={audio} type="audio/mpeg" />
                     </audio>
                   )}
