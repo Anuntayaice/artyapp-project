@@ -3,27 +3,30 @@ import "../src/css/custom.min.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Login } from "./Pages/Login";
 import Home from "./Pages/Home";
-import Exercises from "./Pages/Exercises";
 import MainNavBar from "./components/navbars/MainNavBar";
-import Progress from "./Pages/Progress";
 import ExerciseList from "./Pages/ExerciseList";
-
+import MainExercise from "./Pages/MainExercise";
+import SampleExercise from "./Pages/SampleExercise";
 
 function App() {
+  const isLoginPage = window.location.pathname === "/login";
+
   return (
     <div className="App">
       <BrowserRouter>
-        <MainNavBar />
+        {isLoginPage ? null : <MainNavBar />}
+
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/login" element={<Login />}></Route>
-          <Route path="/exercises" element={<Exercises />}></Route>
+          <Route path="/mainexercise" element={<MainExercise />}></Route>
+          <Route path="/sampleexercise" element={<SampleExercise />}></Route>
           <Route path="/exerciselist" element={<ExerciseList />}></Route>
-          <Route path="/progress" element={<Progress />}></Route>
         </Routes>
       </BrowserRouter>
     </div>
   );
 }
+
 
 export default App;

@@ -8,7 +8,7 @@ const ExPreviewCard = ({ title, time, level, img, status }) => {
 
   const handleClick = () => {
     if (isClickable) {
-      window.location.href = "/exercises";
+      window.location.href = "/sampleexercise";
     }
   };
   return (
@@ -32,11 +32,8 @@ const ExPreviewCard = ({ title, time, level, img, status }) => {
             {level}
           </Col>
           <Col lg={12} className="border-bottom d-inline-block mb-2">
-            XXXX
-          </Col>
-          <Col lg={12} className="border-bottom d-inline-block mb-2">
             {" "}
-            <Image src="medal.png" style={{ maxWidth: "1.5em" }} />
+            <Image src="/images/medal.png" style={{ maxWidth: "1.5em" }} />
           </Col>
         </Row>
       </Card.Body>

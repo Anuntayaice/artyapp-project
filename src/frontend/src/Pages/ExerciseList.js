@@ -11,7 +11,7 @@ const ExerciseList = () => {
       title: "Talk Tales",
       time: "10 minutes",
       level: "beginner",
-      img: "details1.png",
+      img: "/images/details3.png",
       status: "START",
     },
     {
@@ -19,7 +19,7 @@ const ExerciseList = () => {
       title: "Role play",
       time: "15 minutes",
       level: "intermediate",
-      img: "details2.png",
+      img: "/images/details2.png",
       status: "LOCKED",
     },
     {
@@ -27,7 +27,7 @@ const ExerciseList = () => {
       title: "Flash card",
       time: "12 minutes",
       level: "beginner",
-      img: "details3.png",
+      img: "/images/details1.png",
       status: "LOCKED",
     },
   ];

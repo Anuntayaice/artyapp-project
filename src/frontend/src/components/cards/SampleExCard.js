@@ -4,7 +4,7 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import { useState } from "react";
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
 
-const ExCard = ({ imageSrc, textSets }) => {
+const SampleExCard = ({ imageSrc, textSets }) => {
   const [audio, setAudio] = useState(undefined);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -92,7 +92,7 @@ const ExCard = ({ imageSrc, textSets }) => {
       style={{
         width: "80rem",
         minWidth: "75em",
-        maxHeight: "45rem",
+        maxHeight: "42rem",
         borderRadius: "16px",
         backgroundColor: "rgba(232, 230, 230, 0.2)",
       }}
@@ -121,7 +121,7 @@ const ExCard = ({ imageSrc, textSets }) => {
             />
           </Col>
           <Col xs={1} className="px-3">
-            <Image src="medal.png" />
+            <Image src="/images/medal.png" />
           </Col>
         </Row>
       </Card.Header>
@@ -129,7 +129,7 @@ const ExCard = ({ imageSrc, textSets }) => {
         {showCongratulations ? (
           <div className="d-flex flex-column justify-content-center align-items-center custom-font">
             <Image
-              src="bigmedal.png"
+              src="/images/bigmedal.png"
               className="my-5"
               style={{ maxWidth: "13em" }}
             />
@@ -151,9 +151,9 @@ const ExCard = ({ imageSrc, textSets }) => {
           <Row>
             <Col>
               {" "}
-              <Image src={imageSrc} fluid style={{ maxHeight: "90%" }} />
+              <Image src={imageSrc} fluid style={{ maxHeight: "90%"}} />
             </Col>
-            <Col className="d-flex flex-column justify-content-center align-items-center custom-font">
+            <Col className="d-flex flex-column justify-content-center align-items-center custom-font ">
               {" "}
               <div className="align-self-center">
                 {" "}
@@ -181,7 +181,7 @@ const ExCard = ({ imageSrc, textSets }) => {
                 </div>
               </div>
               <Button
-                className="align-self-end mt-auto "
+                className="align-self-end mt-auto mb-5"
                 style={{ width: "9em" }}
                 onClick={handleNextClick}
               >
@@ -195,4 +195,4 @@ const ExCard = ({ imageSrc, textSets }) => {
   );
 };
 
-export default ExCard;
+export default SampleExCard;
