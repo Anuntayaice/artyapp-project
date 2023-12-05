@@ -3,21 +3,19 @@
     flex-direction: column;
 }
 
-.audio-display-wrapper {
-    margin: 2em;
-}
-
 .text-wrapper {
     background-color: white;
     border-radius: 30px;
     max-height: 75vh;
     padding: 0em 5em;
     overflow-y: scroll;
+    min-width: 25em;
 }
 
 .text-content {
     line-height: 30px;
     max-height: 65vh;
+    text-align: center;
 }
 
 .microphone-wrapper {
@@ -29,4 +27,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.audio-wrapper {
+    position: relative;
+    background: #fbf673;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    width: 2em;
+    height: 2em;
+    left: 93%;
+    bottom: 1.5em;
+    color: black;
+    overflow: visible;
+    margin: 0;
 }

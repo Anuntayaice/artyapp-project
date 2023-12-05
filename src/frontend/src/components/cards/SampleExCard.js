@@ -6,7 +6,8 @@ import "../../css/ExCard.css";
 //import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
 import { useReactMediaRecorder } from "react-media-recorder";
 import { ColorRing } from  'react-loader-spinner'
-import { FaMicrophone, FaStop, FaMicrophoneSlash  } from "react-icons/fa";
+import { FaMicrophone, FaStop, FaPlay } from "react-icons/fa";
+import { useGlobalAudioPlayer } from 'react-use-audio-player';
 
 const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
   const [audio, setAudio] = useState(undefined);
@@ -21,7 +22,8 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progressValue, setProgressValue] = useState(0);
   const [showCongratulations, setShowCongratulations] = useState(false);
-
+  const { load, play, pause, stop, isReady, playing, stopped, paused } = useGlobalAudioPlayer();
+  
   const handleClick = () => {
     window.location.href = "/exerciselist";
   };
@@ -110,13 +112,17 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
       }).then(response => response.blob())
       .then(blob => {
         setAudio(URL.createObjectURL(blob));
+        load(URL.createObjectURL(blob), {
+          autoplay: true,
+          format: 'wav',
+        });
         setText(exercise[currentIndex]['content']);
         setLoading(false);
       })
       .catch(error => {
         console.log(error);
       });
-  }, [exercise, loading, currentIndex, exerciseId]);
+  }, [exercise, loading, currentIndex, exerciseId, load]);
   
 
   return (
@@ -190,15 +196,20 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
               <div className="align-self-center text-block">
                 <div className="text-wrapper px-5 text-start pt-3 pb-5 border-0 mb-2">
                   <div className="text-content" dangerouslySetInnerHTML={{ __html: text }}>
-                  </div>
                 </div>
               </div>
-              {audio && (
-                    <audio autoPlay controls>
-                      <source src={audio} type="audio/mpeg" />
-                    </audio>
+              { isReady && (
+                    <div className="audio-wrapper">
+                      {(stopped || paused) && (
+                        <FaPlay onClick={play} />
+                      )}
+                      {playing && (
+                        <FaStop onClick={stop} />
+                      )}
+                    </div>
                   )}
-              <div className="audio-display-wrapper audio-controls d-flex justify-content-center align-items-center">
+              </div>
+              <div className="d-flex justify-content-center align-items-center">
                 { isSpeechExercise && !loadingAssessment && (
                   <div className="microphone-wrapper">
                     {(status === "idle" || status === "stopped") && <FaMicrophone onClick={startRecording}/>}
