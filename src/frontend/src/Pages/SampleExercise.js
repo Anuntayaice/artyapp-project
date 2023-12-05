@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import ExCard from "../components/cards/ExCard";
-const Exercises = () => {
+import SampleExCard from "../components/cards/SampleExCard";
+const SampleExercise = () => {
   const exercise_id = 1;
 
   const [exercise, setExercise] = useState([]);
@@ -29,10 +29,10 @@ const Exercises = () => {
   return (
     <div className="bg-secondary d-flex align-items-start justify-content-center">
       {exercise.length !== 0 && (
-        <ExCard imageSrc={imageSrc} exerciseId={exercise_id} exercise={exercise} />
+        <SampleExCard imageSrc={imageSrc} exerciseId={exercise_id} exercise={exercise} />
       )}
     </div>
   );
 };
 
-export default Exercises;
+export default SampleExercise;

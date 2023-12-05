@@ -6,8 +6,9 @@ import "../../css/ExCard.css";
 //import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
 import { useReactMediaRecorder } from "react-media-recorder";
 import { ColorRing } from  'react-loader-spinner'
+import { FaMicrophone, FaStop, FaMicrophoneSlash  } from "react-icons/fa";
 
-const ExCard = ({ imageSrc, exerciseId, exercise }) => {
+const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
   const [audio, setAudio] = useState(undefined);
   const [loading, setLoading] = useState(true);
   const [canAdvance, setCanAdvance] = useState(false);
@@ -58,6 +59,12 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
     
     let data = await response.json();
     console.log(data);
+
+    if (data['content']['NBest'] === undefined) {
+      console.log('no assessment')
+      setLoadingAssessment(false);
+      return;
+    }
 
     const assessment = data['content']['NBest'][0]['PronunciationAssessment'];
     const words = data['content']['NBest'][0]['Words'];
@@ -146,7 +153,7 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
             />
           </Col>
           <Col xs={1} className="px-3">
-            <Image src="medal.png" />
+            <Image src="/images/medal.png" />
           </Col>
         </Row>
       </Card.Header>
@@ -154,7 +161,7 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
         {showCongratulations ? (
           <div className="d-flex flex-column justify-content-center align-items-center custom-font">
             <Image
-              src="bigmedal.png"
+              src="/images/bigmedal.png"
               className="my-5"
               style={{ maxWidth: "13em" }}
             />
@@ -176,9 +183,9 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
           <Row>
             <Col>
               {" "}
-              <Image src={imageSrc} fluid style={{ maxHeight: "90%" }} />
+              <Image src={imageSrc} fluid style={{ maxHeight: "90%"}} />
             </Col>
-            <Col className="content-col">
+            <Col className="content-col custom-font ">
               {" "}
               <div className="align-self-center text-block">
                 <div className="text-wrapper px-5 text-start pt-3 pb-5 border-0 mb-2">
@@ -193,21 +200,26 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
                   )}
               <div className="audio-display-wrapper audio-controls d-flex justify-content-center align-items-center">
                 { isSpeechExercise && !loadingAssessment && (
-                  <div>
-                    <p>{status}</p>
-                    <button onClick={startRecording}>Start Recording</button>
-                    <button onClick={stopRecording}>Stop Recording</button>
+                  <div className="microphone-wrapper">
+                    {(status === "idle" || status === "stopped") && <FaMicrophone onClick={startRecording}/>}
+                    {status === "recording" && <FaStop onClick={stopRecording}/>}
                   </div>
                 )}
-                <ColorRing
-                  visible={loadingAssessment}
-                  height="80"
-                  width="80"
-                  ariaLabel="blocks-loading"
-                  wrapperStyle={{}}
-                  wrapperClass="blocks-wrapper"
-                  colors={['bg-primary', 'bg-secondary', 'bg-success', 'bg-danger', 'bg-warning', 'bg-info']}
-                />
+                { isSpeechExercise && loadingAssessment && (
+                  <div className="microphone-wrapper">
+                    <ColorRing
+                      visible={loadingAssessment}
+                      height="80"
+                      width="80"
+                      ariaLabel="blocks-loading"
+                      wrapperStyle={{}}
+                      wrapperClass="blocks-wrapper"
+                      colors={['#bba5c2', '#ffcdf9', '#b095b9', '#f2cdff', '#bba5c2']}
+                    />
+                  </div>
+                )}
+
+                
                 </div>
               <Button
                 className="align-self-end"
@@ -225,4 +237,4 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
   );
 };
 
-export default ExCard;
+export default SampleExCard;
