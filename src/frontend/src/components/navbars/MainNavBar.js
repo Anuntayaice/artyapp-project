@@ -16,7 +16,7 @@ const MainNavBar = () => {
     <div>
       <Navbar className="bg-secondary custom-font " style={{ height: "6.5em" }}>
         <Container>
-          <Navbar.Brand href="/"><Image src='artyIcon.png' style={{maxWidth : '15em'}} className='mb-3'/></Navbar.Brand>{" "}
+          <Navbar.Brand href="/"><Image src='artyIcon.png' style={{maxWidth : '9em'}} className='mb-3'/></Navbar.Brand>{" "}
           <Navbar.Brand
             href="/exerciselist"
             active={

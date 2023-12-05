@@ -5,9 +5,9 @@ import { Login } from "./Pages/Login";
 import Home from "./Pages/Home";
 import Exercises from "./Pages/Exercises";
 import MainNavBar from "./components/navbars/MainNavBar";
-import Progress from "./Pages/Progress";
 import ExerciseList from "./Pages/ExerciseList";
-
+import Signup from "./Pages/Signup";
+import TherapistSignup from "./Pages/TherapistSignup";
 
 function App() {
   return (
@@ -19,7 +19,8 @@ function App() {
           <Route path="/login" element={<Login />}></Route>
           <Route path="/exercises" element={<Exercises />}></Route>
           <Route path="/exerciselist" element={<ExerciseList />}></Route>
-          <Route path="/progress" element={<Progress />}></Route>
+          <Route path="/signup" element={<Signup/>}></Route>
+          <Route path="/therapist-signup" element={<TherapistSignup/>}></Route>
         </Routes>
       </BrowserRouter>
     </div>
