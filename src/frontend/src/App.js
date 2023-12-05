@@ -11,6 +11,8 @@ import TherapistLogin from "./Pages/TherapistLogin";
 import TherapistNavBar from "./components/navbars/TherapistNavBar";
 import PatientList from "./Pages/PatientList";
 import PatientInfo from "./Pages/PatientInfo";
+import ExerciseOverviewforTherapist from "./Pages/ExerciseOverviewforTherapist";
+import ExerciseCreation from "./Pages/ExerciseCreation";
 function App() {
   const isLoginPage = window.location.pathname === "/login";
   const isTherapistPage = window.location.pathname.startsWith("/therapist");
@@ -31,6 +33,14 @@ function App() {
           <Route path="/therapist-login" element={<TherapistLogin />} />{" "}
           <Route path="/therapist-patientlist" element={<PatientList />} />
           <Route path="/therapist/:id" element={<PatientInfo />} />
+          <Route
+            path="/therapist/:id/exercise-overview"
+            element={<ExerciseOverviewforTherapist />}
+          />
+          <Route
+            path="/create-exercise"
+            element={<ExerciseCreation />}
+          />
         </Routes>
       </BrowserRouter>
     </div>

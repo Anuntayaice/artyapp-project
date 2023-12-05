@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Form,
-  Button,
-  Container,
-  Row,
-  Col,
-  Image,
-} from "react-bootstrap";
+import { Form, Button, Container, Row, Col, Image } from "react-bootstrap";
 import PatientCard from "../components/cards/PatientCard";
 
 const PatientListPage = () => {
@@ -15,9 +8,10 @@ const PatientListPage = () => {
       id: 1,
       name: "John Doe",
       description: "description",
-      symptoms: "Symptoms",
+      symptoms: "Lorem ipsum dolor sit amet,t dolore magna ",
       exercise: "Hypertension",
       img: "profile1.png",
+      age: "13",
     },
   ];
 
@@ -26,9 +20,11 @@ const PatientListPage = () => {
       id: 5,
       name: "Jane Smith",
       description: "description",
-      symptoms: "Symptoms",
+      symptoms:
+        " consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore e",
       exercise: "Diabetes",
       img: "profile3.png",
+      age: "15",
     },
   ];
 
@@ -36,10 +32,11 @@ const PatientListPage = () => {
     {
       id: 9,
       name: "Bob Johnson",
-      description: "description",
-      symptoms: "Symptoms",
+      symptoms:
+        " consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore e",
       exercise: "Arthritis",
       img: "profile2.png",
+      age: "10",
     },
   ];
 
@@ -48,9 +45,10 @@ const PatientListPage = () => {
       id: 17,
       name: "Charlie Wilson",
       description: "description",
-      symptoms: "Symptoms",
+      symptoms: "Lorem ipsum dolor sit amet,t dolore magna ",
       exercise: "Migraine",
       img: "profile1.png",
+      age: "12",
     },
   ];
 
@@ -128,7 +126,7 @@ const PatientListPage = () => {
 
         <Row>
           {filteredPatients.map((patient) => (
-            <Col key={patient.id} md={12} className="mb-3">
+            <Col key={patient.id} md={12} className="mb-3 therapist-font">
               <PatientCard {...patient} />
             </Col>
           ))}
