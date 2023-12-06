@@ -1,14 +1,13 @@
-import React from "react";
 
-const TherapistLogin = () => {
+import React from 'react'
+import TherapistLoginCard from '../components/cards/TherapistLoginCard';
+
+export const TherapistLogin = () => {
   return (
-    <div
-      className="bg-black vh-100 "
-      style={{
-        background: "linear-gradient(to top, #000000, #999292)",
-      }}
-    ></div>
+    <div className="bg-secondary d-flex align-items-top justify-content-center vh-100">
+      <TherapistLoginCard/>
+    </div>
   );
-};
-
+}
 export default TherapistLogin;
+

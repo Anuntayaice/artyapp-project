@@ -26,6 +26,7 @@ const MainNavBar = () => {
               className=" mx-5"
             />
           </Navbar.Brand>{" "}
+
           <Navbar.Brand
             href="/exerciselist"
             active={
