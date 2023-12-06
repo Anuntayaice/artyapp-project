@@ -13,7 +13,7 @@
   }
 }
 .custom-font {
-  font-family: 'OpenDyslexic', sans-serif;
+  font-family: "OpenDyslexic", sans-serif;
 }
 
 .App-header {
@@ -38,4 +38,7 @@
   to {
     transform: rotate(360deg);
   }
+}
+.card-hover:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }

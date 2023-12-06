@@ -1,0 +1,38 @@
+/* CreationCard.css */
+
+.card-container {
+  perspective: 1000px;
+}
+
+/* Apply flip effect only to the cards with the 'exercise-creation-card' class */
+.card.exercise-creation-card {
+  width: 19rem;
+  height: 28rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+
+.card.exercise-creation-card:hover {
+  transform: rotateY(180deg);
+}
+
+.front,
+.back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.front {
+  transform: rotateY(0deg);
+}
+
+.back {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

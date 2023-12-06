@@ -1,20 +1,22 @@
 import React from "react";
 import { Image, Card, Button, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-const ExPreviewCard = ({ title, time, level, img, status }) => {
-  const isClickable = status === "START";
-  const buttonVariant = isClickable ? "success" : "danger";
-  const backgroundColor = isClickable ? "" : "rgba(255, 255, 255, 0.5)";
+const ExGenPreviewCard = ({ id, title, time, level, img }) => {
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    if (isClickable) {
-      window.location.href = "/sampleexercise";
-    }
+    navigate(`/exercise/${id}`);
   };
+
   return (
     <Card
-      style={{ width: "18rem", backgroundColor }}
-      className="d-flex flex-column align-items-center justify-content-center  border-0"
+      style={{
+        width: "19rem",
+        height: "28rem",
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+      }}
+      className="d-flex flex-column align-items-center justify-content-center border-0 mx-4 text-white"
     >
       <Card.Img
         variant="top"
@@ -38,16 +40,14 @@ const ExPreviewCard = ({ title, time, level, img, status }) => {
         </Row>
       </Card.Body>
       <Button
-        variant={buttonVariant}
-        className="my-4"
+        className="my-4 bg-primary border-o"
         style={{ width: "7em" }}
         onClick={handleClick}
-        disabled={!isClickable}
       >
-        {status}
+        PREVIEW{" "}
       </Button>
     </Card>
   );
 };
 
-export default ExPreviewCard;
+export default ExGenPreviewCard;
