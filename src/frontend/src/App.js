@@ -7,13 +7,13 @@ import MainNavBar from "./components/navbars/MainNavBar";
 import ExerciseList from "./Pages/ExerciseList";
 import MainExercise from "./Pages/MainExercise";
 import SampleExercise from "./Pages/SampleExercise";
-import TherapistLogin from "./Pages/TherapistLogin";
 import TherapistNavBar from "./components/navbars/TherapistNavBar";
 import PatientList from "./Pages/PatientList";
 import PatientInfo from "./Pages/PatientInfo";
 import ExerciseOverviewforTherapist from "./Pages/ExerciseOverviewforTherapist";
 import ExerciseCreation from "./Pages/ExerciseCreation";
 import TherapistSignup from "./Pages/TherapistSignup";
+import TherapistLogin from "./Pages/TherapistLogin";
 
 function App() {
   const isLoginPage = window.location.pathname === "/login";

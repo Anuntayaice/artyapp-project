@@ -2,10 +2,16 @@
 import React from 'react'
 import TherapistLoginCard from '../components/cards/TherapistLoginCard';
 
-export const TherapistLogin = () => {
+ const TherapistLogin = () => {
   return (
-    <div className="bg-secondary d-flex align-items-top justify-content-center vh-100">
-      <TherapistLoginCard/>
+    <div
+      className="bg-black vh-100  d-flex flex-column align-items-center justify-content-start pt-5"
+      style={{
+        background: "linear-gradient(to top, #000000, #999292)",
+      }}
+    >
+      {" "}
+      <TherapistLoginCard />
     </div>
   );
 }
