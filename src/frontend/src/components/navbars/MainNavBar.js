@@ -5,6 +5,9 @@ import { useState } from "react";
 import { Image } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import Container from "react-bootstrap/Container";
+import { FaUser } from "react-icons/fa";
+import { FaGear } from "react-icons/fa6";
+import "../../css/navbar.css";
 
 const MainNavBar = () => {
   const [activeSection, setActiveSection] = useState("home");
@@ -24,18 +27,18 @@ const MainNavBar = () => {
             />
           </Navbar.Brand>{" "}
           <Navbar.Brand
-            href="/mainexercise"
+            href="/exerciselist"
             active={
-              activeSection === "mainexercise" ||
-              location.pathname === "/mainexercise"
+              activeSection === "exerciselist" ||
+              location.pathname === "/exerciselist"
             }
-            onClick={() => handleNavClick("mainexercise")}
+            onClick={() => handleNavClick("exerciselist")}
             style={{
               color: "white",
               fontSize: "1.5em",
               borderBottom:
-                activeSection === "mainexercise" ||
-                location.pathname === "/mainexercise"
+                activeSection === "exerciselist" ||
+                location.pathname === "/exerciselist"
                   ? "5px solid white"
                   : "none",
               borderRadius: "7px",
@@ -46,14 +49,22 @@ const MainNavBar = () => {
             Exercise
           </Navbar.Brand>
           <Navbar.Toggle />
-          <Navbar.Collapse className="justify-content-end">
-            <Image src="/images/settingicon.png" className="mx-5" />{" "}
+          <Navbar.Collapse className="justify-content-end navbar-icons">
             <Nav.Link
+                className="d-flex align-items-center m-3"
+                //href="/login"
+                active={activeSection === "login"}
+                onClick={() => handleNavClick("login")}
+              >
+              <FaGear />
+            </Nav.Link>
+            <Nav.Link
+              className="d-flex align-items-center m-3"
               href="/login"
               active={activeSection === "login"}
               onClick={() => handleNavClick("login")}
             >
-              <Image src="/images/usericon.png" />
+              <FaUser />
             </Nav.Link>
           </Navbar.Collapse>
         </Container>
