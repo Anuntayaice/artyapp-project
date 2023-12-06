@@ -27,18 +27,18 @@ const MainNavBar = () => {
             />
           </Navbar.Brand>{" "}
           <Navbar.Brand
-            href="/mainexercise"
+            href="/exerciselist"
             active={
-              activeSection === "mainexercise" ||
-              location.pathname === "/mainexercise"
+              activeSection === "exerciselist" ||
+              location.pathname === "/exerciselist"
             }
-            onClick={() => handleNavClick("mainexercise")}
+            onClick={() => handleNavClick("exerciselist")}
             style={{
               color: "white",
               fontSize: "1.5em",
               borderBottom:
-                activeSection === "mainexercise" ||
-                location.pathname === "/mainexercise"
+                activeSection === "exerciselist" ||
+                location.pathname === "/exerciselist"
                   ? "5px solid white"
                   : "none",
               borderRadius: "7px",
