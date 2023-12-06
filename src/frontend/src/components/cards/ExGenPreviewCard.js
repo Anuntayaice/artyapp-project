@@ -2,7 +2,7 @@ import React from "react";
 import { Image, Card, Button, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const ExGenPreviewCard = ({ id, title, time, level, img, status }) => {
+const ExGenPreviewCard = ({ id, title, time, level, img }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -11,8 +11,12 @@ const ExGenPreviewCard = ({ id, title, time, level, img, status }) => {
 
   return (
     <Card
-      style={{ width: "19rem" }}
-      className="d-flex flex-column align-items-center justify-content-center  border-0 mx-4"
+      style={{
+        width: "19rem",
+        height: "28rem",
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+      }}
+      className="d-flex flex-column align-items-center justify-content-center border-0 mx-4 text-white"
     >
       <Card.Img
         variant="top"

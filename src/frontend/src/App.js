@@ -38,7 +38,7 @@ function App() {
             element={<ExerciseOverviewforTherapist />}
           />
           <Route
-            path="/create-exercise"
+            path="/therapist/create-exercise"
             element={<ExerciseCreation />}
           />
         </Routes>

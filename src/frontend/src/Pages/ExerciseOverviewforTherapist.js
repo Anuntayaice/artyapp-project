@@ -1,4 +1,3 @@
-// ExerciseOverviewforTherapist.js
 import React, { useState } from "react";
 import { Col, Row, Button } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
@@ -18,10 +17,10 @@ const ExerciseOverviewforTherapist = () => {
     },
     {
       id: 2,
-      title: "Flash card",
+      title: "Role play",
       time: "12 minutes",
       level: "beginner",
-      img: "/images/details1.png",
+      img: "/images/details2.png",
     },
   ]);
 
@@ -62,7 +61,7 @@ const ExerciseOverviewforTherapist = () => {
         <Row className="mt-5 d-flex justify-content-around">
           {renderExerciseCards()}
           <Col md={4} sm={6} xs={12} className="mb-3">
-            <ExerciseCreationCard />
+            <ExerciseCreationCard  />
           </Col>
         </Row>
       </div>

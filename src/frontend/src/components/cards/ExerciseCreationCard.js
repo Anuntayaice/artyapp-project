@@ -1,18 +1,62 @@
-import React from "react";
-import { Card, Button } from "react-bootstrap";
+// ExerciseCreationCard.js
+import React, { useState } from "react";
+import { Card, Form, Button ,Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import "../../css/CreationCard.css";
 
 const ExerciseCreationCard = () => {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  const createExercise = () => {
+    console.log("Create exercise clicked");
+  };
+
   return (
-    <Card style={{ width: "18rem" }} className="mb-3">
-      <Card.Body>
-        <Card.Title>Create New Exercise</Card.Title>
-        <Card.Text>Click here to create a new exercise.</Card.Text>
-        <Link to="/create-exercise">
-          <Button variant="primary">Create Exercise</Button>
-        </Link>
-      </Card.Body>
-    </Card>
+    <div>
+      <Card
+        className={`card exercise-creation-card d-flex flex-column align-items-center justify-content-center border-0 mx-4 px-4 ${
+          isFlipped ? "card-hover" : ""
+        }`}
+        onMouseEnter={() => setIsFlipped(true)}
+        onMouseLeave={() => setIsFlipped(false)}
+      >
+        <div className="front d-flex align-items-center justify-content-center">
+          <h4 className="text-white" onClick={createExercise}>
+            Generate new exercise
+          </h4>
+        </div>
+        <div className="back text-start d-flex align-items-center justify-content-start pt-5">
+          <Form>
+            <Form.Group controlId="speechFocus">
+              <Form.Label>Speech sounds need to be the focus</Form.Label>
+              <Form.Control
+                as="textarea"
+                className="border-2 border-black"
+                rows={3}
+              />
+            </Form.Group>
+            <Form.Group controlId="patientInterest">
+              <Form.Label>Patient’s interest</Form.Label>
+              <Form.Control
+                as="textarea"
+                className="border-2 border-black"
+                rows={6}
+              />
+            </Form.Group>
+            <Link to="/therapist/create-exercise" className="text-decoration-none">
+              <div class="d-grid my-3">
+                <Button
+                  class="btn btn-black border-none"
+                  style={{ backgroundColor: "black", color: "white" }}
+                >
+                  Generate{" "}
+                </Button>
+              </div>
+            </Link>
+          </Form>
+        </div>
+      </Card>
+    </div>
   );
 };
 
