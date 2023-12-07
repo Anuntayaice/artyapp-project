@@ -6,9 +6,9 @@ function PatientSignupCard() {
   const [selectedAvatar, setSelectedAvatar] = useState(null);
 
   const avatars = [
-    { id: 1, src: "/panda.png" },
-    { id: 2, src: "/cat.png" },
-    { id: 3, src: "/bear.png" },
+    { id: 1, src: "/images/panda.png" },
+    { id: 2, src: "/images/cat.png" },
+    { id: 3, src: "/images/bear.png" },
   ];
   const handleAvatarClick = (avatarId) => {
     setSelectedAvatar(avatarId);

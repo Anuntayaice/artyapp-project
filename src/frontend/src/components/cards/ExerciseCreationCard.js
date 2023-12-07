@@ -1,6 +1,5 @@
-// ExerciseCreationCard.js
 import React, { useState } from "react";
-import { Card, Form, Button ,Row } from "react-bootstrap";
+import { Card, Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "../../css/CreationCard.css";
 
