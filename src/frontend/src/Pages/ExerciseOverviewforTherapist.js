@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 import ExGenPreviewCard from "../components/cards/ExGenPreviewCard";
 import ExerciseCreationCard from "../components/cards/ExerciseCreationCard";
 import { Link } from "react-router-dom";
-import ExerciseCreation from "./ExerciseCreation";
 
 const ExerciseOverviewforTherapist = () => {
   const [exerciseData, setExerciseData] = useState([
@@ -24,10 +23,6 @@ const ExerciseOverviewforTherapist = () => {
     },
   ]);
 
-  const onCreateExercise = (newExercise) => {
-    setExerciseData((prevExerciseData) => [...prevExerciseData, newExercise]);
-    console.log(exerciseData);
-  };
 
   const location = useLocation();
   const { patient } = location.state;
@@ -53,8 +48,7 @@ const ExerciseOverviewforTherapist = () => {
 
   return (
     <div
-      className="bg-black vh-100 pt-4 px-4 text-white"
-      style={{ background: "linear-gradient(to top, #000000, #999292)" }}
+      className="bg-dark vh-100 pt-4 px-4 text-white"
     >
       <h2>Select Exercise for {patient.patientName}</h2>
       <div className="container d-flex justify-content-center align-items-center ">

@@ -25,7 +25,7 @@ const ExerciseCreationCard = () => {
           backgroundColor: "rgba(255, 255, 255, 0.2)",
         }}
       >
-        <div className="front d-flex align-items-center justify-content-center ">
+        <div className="front d-flex align-items-center justify-content-center px-3">
           <h4 className="text-white" onClick={createExercise}>
             Generate new exercise
           </h4>

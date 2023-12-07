@@ -3,7 +3,7 @@ import { Image, Card, Button, Row, Col } from "react-bootstrap";
 
 const ExPreviewCard = ({ title, time, level, img, status }) => {
   const isClickable = status === "START";
-  const buttonVariant = isClickable ? "success" : "danger";
+  const buttonVariant = isClickable ? "success" : "";
   const backgroundColor = isClickable ? "" : "rgba(255, 255, 255, 0.5)";
 
   const handleClick = () => {
@@ -40,7 +40,11 @@ const ExPreviewCard = ({ title, time, level, img, status }) => {
       <Button
         variant={buttonVariant}
         className="my-4"
-        style={{ width: "7em" }}
+        style={{
+          width: "7em",
+          backgroundColor: isClickable ? "success" : "#BBBBBB",
+          border : 'none',
+        }}
         onClick={handleClick}
         disabled={!isClickable}
       >

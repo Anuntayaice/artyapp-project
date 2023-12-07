@@ -18,10 +18,9 @@ const TherapistNavBar = () => {
   return (
     <div>
       <Navbar
-        className="bg-black custom-font "
+        className="bg-dark custom-font "
         style={{
           height: "8em",
-          background: "linear-gradient(to top,#999292, #999292)",
         }}
       >
         <Container>

@@ -21,10 +21,7 @@ const PatientInfo = () => {
 
   return (
     <div
-      className="bg-black vh-100 pt-4 px-4"
-      style={{
-        background: "linear-gradient(to top, #000000, #999292)",
-      }}
+      className="bg-dark vh-100 pt-4 px-4"
     >
       <Card
         style={{ maxHeight: "20em" }}

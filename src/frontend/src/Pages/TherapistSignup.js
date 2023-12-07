@@ -3,11 +3,7 @@ import TherapistSignupCard from "../components/cards/TherapistSignupCard";
 import { Image } from "react-bootstrap";
 const TherapistSignup = () => {
   return (
-    <div
-      className="bg-black vh-100  text-white d-flex flex-column justify-content-center align-items-center"
-      style={{ background: "linear-gradient(to top, #000000, #999292)" }}
-    >
-      {" "}
+    <div className="bg-dark d-flex flex-column align-items-center justify-content-start  vh-100">
       <Image
         src="/images/artyIcon.png"
         fluid
@@ -15,9 +11,10 @@ const TherapistSignup = () => {
           maxWidth: "12em",
           position: "relative",
           zIndex: 1,
+          marginBottom : '-50px',
         }}
       />
-      <TherapistSignupCard />{" "}
+      <TherapistSignupCard />
     </div>
   );
 };

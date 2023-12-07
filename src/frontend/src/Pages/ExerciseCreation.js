@@ -9,8 +9,7 @@ const textArray = text ? text.split(".") : [];
 
   return (
     <div
-      className="bg-black vh-100 pt-4 px-4 text-white d-flex justify-content-center align-items-center"
-      style={{ background: "linear-gradient(to top, #000000, #999292)" }}
+      className="bg-dark vh-100 pt-4 px-4 text-white d-flex justify-content-center align-items-center"
     >
       <Card
         className="text-center mb-5 pt-4 mt-3"

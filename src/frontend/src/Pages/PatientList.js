@@ -76,10 +76,8 @@ const PatientListPage = () => {
 
   return (
     <div
-      className="bg-black vh-100 pt-5"
-      style={{
-        background: "linear-gradient(to top, #000000, #999292)",
-      }}
+      className="bg-dark vh-100 pt-5"
+
     >
       <Container>
         <Row className="mb-3 d-flex align-items-center">
