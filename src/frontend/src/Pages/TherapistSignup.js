@@ -1,29 +1,25 @@
-import React from 'react';
-import SignupCard1 from '../components/cards/SignupCard1';
-
+import React from "react";
+import TherapistSignupCard from "../components/cards/TherapistSignupCard";
+import { Image } from "react-bootstrap";
 const TherapistSignup = () => {
   return (
-    <div className='bg-black vh-100' style={{
-      background: "linear-gradient(to top, #000000, #999292)",
-      position: "relative", // Add this to make positioning relative
-      overflow: "hidden",     // Add this to prevent overflow issues
-      color: "white"
-    }}>
-      <SignupCard1 />
-      <img
-        src="/ArtyIcon.png"
+    <div
+      className="bg-black vh-100  text-white d-flex flex-column justify-content-center align-items-center"
+      style={{ background: "linear-gradient(to top, #000000, #999292)" }}
+    >
+      {" "}
+      <Image
+        src="/images/artyIcon.png"
+        fluid
         style={{
-          maxWidth: '10em',
-          position: "absolute",  // Use absolute positioning
-          top: "-3.4%",            // Center vertically
-          left: "50%",           // Center horizontally
-          transform: "translate(-50%, -50%)", // Center precisely
+          maxWidth: "12em",
+          position: "relative",
+          zIndex: 1,
         }}
-        className='mb-3'
-        alt="Arty Icon" // Don't forget to add alt text for accessibility
       />
-    </div>  
+      <TherapistSignupCard />{" "}
+    </div>
   );
-}
+};
 
 export default TherapistSignup;

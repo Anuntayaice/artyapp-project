@@ -1,0 +1,16 @@
+/* styles.css */
+.custom-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid hsla(120, 100%, 99%, 0.4);
+  margin-bottom: 30px;
+  border-radius: 0;
+  padding: 5px;
+  color: white;
+  font-size: 14px;
+}
+  .custom-input:focus {
+    background: transparent; 
+    outline: none; /* Remove the default focus outline */
+  
+}
