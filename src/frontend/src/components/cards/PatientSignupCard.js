@@ -139,13 +139,12 @@ function PatientSignupCard() {
                 src={avatar.src}
                 alt={`Digital Avatar ${avatar.id}`}
                 style={{
+                  width: "6em",
                   marginBottom: "20px",
-                  float: "left",
-                  paddingRight: "15px",
+                  marginRight: "1em",
                   border:
-                    selectedAvatar === avatar.id ? "2px solid blue" : "none",
+                    selectedAvatar === avatar.id ? "2px solid #FAF45A" : "none",
                   cursor: "pointer",
-                  maxWidth:'7em',
                 }}
                 onClick={() => handleAvatarClick(avatar.id)}
                 roundedCircle

@@ -24,19 +24,18 @@ const LoginCard = () => {
     setPassword(e.target.value);
   };
 
-
-    const handleLogin = () => {
-      // Check if the email and password are correct
-      if (email === "123" && password === "123") {
-        // Navigate to the /mainexercise route
-        window.location.href = "/mainexercise";
-      } else {
-        // Display an error message or handle the error accordingly
-        setError("Invalid email or password");
-      }
-       console.log("Email:", email);
-       console.log("Password:", password);
-    };
+  const handleLogin = () => {
+    // Check if the email and password are correct
+    if (email === "patient@example.com" && password === "123") {
+      window.location.href = "/";
+    } else if (email === "therapist@example.com" && password === "123") {
+      window.location.href = "/therapist-patientlist";
+    } else {
+      setError("Invalid email or password");
+    }
+    console.log("Email:", email);
+    console.log("Password:", password);
+  };
    
  
 
