@@ -61,6 +61,12 @@
     font-size: 30px;
 }
 
+.tooltip-mistake {
+    margin-left: 10px;
+    text-decoration: none;
+}
+
+
 .button-next:disabled {
     background-color: #e9ecef;
     color: #a8a8a8;

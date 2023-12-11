@@ -11,6 +11,7 @@ import { useGlobalAudioPlayer } from 'react-use-audio-player';
 import Carousel from 'react-bootstrap/Carousel';
 import Modal from 'react-bootstrap/Modal';
 import { Tick } from 'react-crude-animated-tick';
+import { Tooltip } from 'react-tooltip';
 
 const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
   const [audio, setAudio] = useState(undefined);
@@ -28,7 +29,7 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
   const { load, play, pause, stop, isReady, playing, stopped, paused } = useGlobalAudioPlayer();
   
   const [show, setShow] = useState(false);
-  const [modalText, setModalText] = useState('');
+  const [pronouncedWords, setPronouncedWords] = useState([]);
 
   const handleCloseModal = () => setShow(false);
   const handleShowModal = () => setShow(true);
@@ -93,22 +94,54 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
     let hasFailed = accuracy < 60 || fluency < 60 || completeness < 60 || pronunciation < 60;
     // change word color of text based on assessment
     // new_text is a string with html tags
-    let new_text = exercise[currentIndex]['content'].split(' ');
+    let pronouncedWordsList = [];
     for (let i = 0; i < words.length; i++) {
-      if (!new_text[i]) break;
-      if (words[i]['PronunciationAssessment']['AccuracyScore'] < 75) {
-        new_text[i] =`<span style="color:red; cursor:pointer; margin-left:10px;" title="${words[i]['PronunciationAssessment']['ErrorType'] || 'Mispronounciation'}">${new_text[i]}</span>`;
+      if (words[i]['PronunciationAssessment']['ErrorType'] !== 'None') {
+        //new_text[i] =`<span class="span-mistake" style="color:red; cursor:pointer;" title="${words[i]['PronunciationAssessment']['ErrorType'] || 'Mispronounciation'}">${new_text[i]}</span>`;
         hasFailed = true;
-      } else {
-        new_text[i] =`<span style="color:green; margin-left:10px;" title="">${new_text[i]}</span>`;
       }
+      pronouncedWordsList.push({word: words[i]['Word'], errorType: words[i]['PronunciationAssessment']['ErrorType']});
     }
-    setModalText(new_text.join(''));
+    setPronouncedWords(pronouncedWordsList);
     setCanAdvance(!hasFailed);
     setLoadingAssessment(false);
     if (hasFailed) {
-      setShow(true);
+      handleShowModal();
     }
+  };
+
+  const getAnchorsAndTooltips = () => {
+    const mistake_colors = {
+      'Mispronunciation': 'red',
+      'Omission': 'gray',
+      'Insertion': '#40E0D0',
+      'None': 'green',
+    }
+
+    return pronouncedWords.map((word, index) => {
+      if (index === 0) {
+        // capitalize first word
+        word.word = word.word.charAt(0).toUpperCase() + word.word.slice(1);
+      }
+
+      if (word.errorType === 'None') {
+        return (
+          <>
+            <a className='tooltip-mistake' style={{color: mistake_colors[word.errorType]}}>{`${word.word}${index === pronouncedWords.length - 1 ? '.' : ' '}`}</a>
+          </>
+          
+        );
+      } else {
+        return (
+          <>
+            <a className='tooltip-mistake' style={{color: mistake_colors[word.errorType], cursor: 'pointer'}} data-tooltip-id={`${index}-anchor`} data-tooltip-content={word.errorType}>
+            {`${word.word}${index === pronouncedWords.length - 1 ? '.' : ' '}`} 
+            </a>
+            <Tooltip id={`${index}-anchor`} />
+          </>
+        );
+      }
+    });
   };
 
   useEffect(() => {
@@ -299,7 +332,9 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
       >
         <Modal.Body className="mistake-body">
           <div className="mistake-info">Whoops! Seems you made a mistake! Hover the words to see what you did wrong!</div>
-          <div className="text-content-normal mistake-text" dangerouslySetInnerHTML={{ __html: modalText }}></div>
+          <div className="text-content-normal mistake-text">
+            {getAnchorsAndTooltips()}
+          </div>
         </Modal.Body>
         <Modal.Footer className="mistake-footer">
           <Button variant="primary" onClick={handleCloseModal}>Understood</Button>
