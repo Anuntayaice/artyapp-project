@@ -14,8 +14,71 @@
 
 .text-content {
     line-height: 30px;
-    max-height: 65vh;
+    height: 65vh;
     text-align: center;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+}
+
+.text-content-normal {
+    line-height: 30px;
+    height: 35vh;
+    text-align: center;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+}
+
+.text-content-inner {
+    width: 70%;
+
+}
+
+.mistake-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: "OpenDyslexic", sans-serif;
+    font-size: 25px;
+    margin: 2em 1em;
+}
+
+.mistake-footer {
+    font-family: "OpenDyslexic", sans-serif;
+}
+
+.mistake-info {
+    text-align: center;
+}
+
+.mistake-text {
+    font-size: 30px;
+}
+
+.button-next:disabled {
+    background-color: #e9ecef;
+    color: #a8a8a8;
+    border-color: #e9ecef;
+}
+
+.index-story {
+    display: inline-block;
+    padding: 20px 28px;
+    background-color: #fbf673;
+    border-radius: 100%;
+    margin-bottom: 1em;
+}
+
+.index-story-inner {
+    display: flex;
+    align-content: center;
+    justify-content: center;
 }
 
 .microphone-wrapper {

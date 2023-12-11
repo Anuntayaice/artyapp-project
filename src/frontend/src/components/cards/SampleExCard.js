@@ -8,6 +8,9 @@ import { useReactMediaRecorder } from "react-media-recorder";
 import { ColorRing } from  'react-loader-spinner'
 import { FaMicrophone, FaStop, FaPlay } from "react-icons/fa";
 import { useGlobalAudioPlayer } from 'react-use-audio-player';
+import Carousel from 'react-bootstrap/Carousel';
+import Modal from 'react-bootstrap/Modal';
+import { Tick } from 'react-crude-animated-tick';
 
 const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
   const [audio, setAudio] = useState(undefined);
@@ -24,6 +27,12 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
   const [showCongratulations, setShowCongratulations] = useState(false);
   const { load, play, pause, stop, isReady, playing, stopped, paused } = useGlobalAudioPlayer();
   
+  const [show, setShow] = useState(false);
+  const [modalText, setModalText] = useState('');
+
+  const handleCloseModal = () => setShow(false);
+  const handleShowModal = () => setShow(true);
+
   const handleClick = () => {
     window.location.href = "/exerciselist";
   };
@@ -86,16 +95,20 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
     // new_text is a string with html tags
     let new_text = exercise[currentIndex]['content'].split(' ');
     for (let i = 0; i < words.length; i++) {
+      if (!new_text[i]) break;
       if (words[i]['PronunciationAssessment']['AccuracyScore'] < 75) {
-        new_text[i] =`<span style="color:red; cursor:pointer" title="${words[i]['PronunciationAssessment']['ErrorType'] || 'Mispronounciation'}">${new_text[i]}</span>`;
+        new_text[i] =`<span style="color:red; cursor:pointer; margin-left:10px;" title="${words[i]['PronunciationAssessment']['ErrorType'] || 'Mispronounciation'}">${new_text[i]}</span>`;
         hasFailed = true;
       } else {
-        new_text[i] =`<span style="color:green" title="">${new_text[i]}</span>`;
+        new_text[i] =`<span style="color:green; margin-left:10px;" title="">${new_text[i]}</span>`;
       }
     }
-    setText(new_text.join(' '));
+    setModalText(new_text.join(''));
     setCanAdvance(!hasFailed);
     setLoadingAssessment(false);
+    if (hasFailed) {
+      setShow(true);
+    }
   };
 
   useEffect(() => {
@@ -124,6 +137,19 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
       });
   }, [exercise, loading, currentIndex, exerciseId, load]);
   
+  const genSentencePairs = (fullBodyText) => {
+    // Split the full body text into individual sentences
+    const sentences = fullBodyText.match(/[^.!?]+[.!?]+/g);
+
+    // Create pairs of sentences
+    const sentencePairs = [];
+    for (let i = 0; i < sentences.length - 1; i += 2) {
+      const pair = `${sentences[i].trim()} ${sentences[i + 1].trim()}`;
+      sentencePairs.push(pair);
+    }
+
+    return sentencePairs;
+  }
 
   return (
     <Card
@@ -194,9 +220,28 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
             <Col className="content-col custom-font ">
               {" "}
               <div className="align-self-center text-block">
-                <div className="text-wrapper px-5 text-start pt-3 pb-5 border-0 mb-2">
-                  <div className="text-content" dangerouslySetInnerHTML={{ __html: text }}>
-                </div>
+                <div className="text-wrapper px-5 text-start pt-3 pb-3 border-0 mb-2">
+                  { currentIndex === 0 && text ? (
+                    <Carousel data-bs-theme="dark" indicators={false} className="d-flex" interval={1000000} wrap={false}>
+                      {text && genSentencePairs(text).map((pair, index) => {
+                        return (
+                          <Carousel.Item key={index}>
+                            <div className="text-content">
+                              <div className="text-content-inner">
+                                <div className="index-story">
+                                  <div className="index-story-inner">{index + 1}</div>
+                                </div>
+                                <p>{pair}</p>
+                              </div>
+                            </div>
+                          </Carousel.Item>
+                        );
+                      })}
+                      </Carousel>
+                  ) : ( text && 
+                    <div className="text-content-normal" dangerouslySetInnerHTML={{ __html: text }}>
+                    </div>
+                  )}
               </div>
               { isReady && (
                     <div className="audio-wrapper">
@@ -212,8 +257,9 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
               <div className="d-flex justify-content-center align-items-center">
                 { isSpeechExercise && !loadingAssessment && (
                   <div className="microphone-wrapper">
-                    {(status === "idle" || status === "stopped") && <FaMicrophone onClick={startRecording}/>}
-                    {status === "recording" && <FaStop onClick={stopRecording}/>}
+                    {canAdvance ? (<Tick size={70} />) : (
+                    (status === "idle" || status === "stopped") ? <FaMicrophone onClick={startRecording}/> : 
+                    (status === "recording" && <FaStop onClick={stopRecording}/>))}
                   </div>
                 )}
                 { isSpeechExercise && loadingAssessment && (
@@ -233,7 +279,7 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
                 
                 </div>
               <Button
-                className="align-self-end"
+                className="align-self-end button-next"
                 style={{ width: "9em" }}
                 onClick={handleNextClick}
                 disabled={isSpeechExercise && !canAdvance}
@@ -244,6 +290,21 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
           </Row>
         )}
       </Card.Body>
+      <Modal
+        show={show}
+        onHide={handleCloseModal}
+        backdrop="static"
+        keyboard={false}
+        size='xl'
+      >
+        <Modal.Body className="mistake-body">
+          <div className="mistake-info">Whoops! Seems you made a mistake! Hover the words to see what you did wrong!</div>
+          <div className="text-content-normal mistake-text" dangerouslySetInnerHTML={{ __html: modalText }}></div>
+        </Modal.Body>
+        <Modal.Footer className="mistake-footer">
+          <Button variant="primary" onClick={handleCloseModal}>Understood</Button>
+        </Modal.Footer>
+      </Modal>
     </Card>
   );
 };
