@@ -14,7 +14,7 @@ import PatientInfo from "./Pages/PatientInfo";
 import ExerciseOverviewforTherapist from "./Pages/ExerciseOverviewforTherapist";
 import ExerciseCreation from "./Pages/ExerciseCreation";
 import TherapistSignup from "./Pages/TherapistSignup";
-
+import AddPatient from "./Pages/AddPatient";
 
 function App() {
   const isLoginPage = window.location.pathname === "/login";
@@ -46,6 +46,8 @@ function App() {
               path="/therapist/create-exercise"
               element={<ExerciseCreation />}
             />
+            <Route path ='/therapist/add-patient'
+            element = {<AddPatient/>}/>
           </Routes>
         </BrowserRouter>
       </div>

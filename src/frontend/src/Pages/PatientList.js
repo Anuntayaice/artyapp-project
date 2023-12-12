@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Image } from "react-bootstrap";
 import PatientCard from "../components/cards/PatientCard";
+import { useNavigate } from "react-router-dom";
 
 const PatientListPage = () => {
+    const navigate = useNavigate();
+    const handleClick = () => {
+      navigate(`/therapist/add-patient`);
+    };
   const patientData1 = [
     {
       id: 1,
@@ -77,7 +82,6 @@ const PatientListPage = () => {
   return (
     <div
       className="bg-dark vh-100 pt-5"
-
     >
       <Container>
         <Row className="mb-3 d-flex align-items-center">
@@ -116,6 +120,7 @@ const PatientListPage = () => {
               variant=""
               className="w-100 border-none text-black mb-3 bg-primary "
               style={{ height: "3em", borderRadius: "12px" }}
+              onClick={handleClick}
             >
               Add Patient
             </Button>
