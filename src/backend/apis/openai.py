@@ -93,8 +93,8 @@ class OpenAI(Exercise):
         else:
             raise Exception("Invalid exercise type.")
 
-    def gen_image_description_exercise(self) -> str:
-        prompt = self.gen_image_description()
+    def gen_image_description_exercise(self, speech_focus, interests) -> str:
+        prompt = self.gen_image_description(speech_focus, interests)
 
         res = self.gen_gpt(prompt, self.client, None)
 

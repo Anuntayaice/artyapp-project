@@ -6,6 +6,8 @@ import os
 import soundfile
 import shutil
 import time
+import requests
+from threading import Thread
 
 from apis.openai import OpenAI
 from apis.azure import Azure
@@ -24,6 +26,107 @@ app.config.update({
     'APISPEC_SWAGGER_URL': '/swagger/',  # URI to access API Doc JSON
     'APISPEC_SWAGGER_UI_URL': '/swagger-ui/'  # URI to access UI of API Doc
 })
+
+
+def gen_audios(exercise_id):
+    # check that the exercise exists in the exercises collection
+    if not os.path.exists(f'exercises/{exercise_id}'):
+        return jsonify({'error': 'Exercise does not exist.'})
+
+    # get the exercise phrases and compound nouns
+    phrases = []
+    compound_nouns = []
+    with open(f'exercises/{exercise_id}/phrases.txt', 'r') as f:
+        phrases = f.readlines()
+    with open(f'exercises/{exercise_id}/compound_nouns.txt', 'r') as f:
+        compound_nouns = f.readlines()
+
+    # load story
+    story = ''
+    with open(f'exercises/{exercise_id}/story.txt', 'r') as f:
+        story = f.read()
+
+    # create or replace the audios folder
+    if os.path.exists(f'exercises/{exercise_id}/audios'):
+        shutil.rmtree(f'exercises/{exercise_id}/audios')
+    os.mkdir(f'exercises/{exercise_id}/audios')
+
+    # create the phrases and compound_nouns folders
+    os.mkdir(f'exercises/{exercise_id}/audios/phrases')
+    os.mkdir(f'exercises/{exercise_id}/audios/compound_nouns')
+
+    # get the audio for the story
+    story = story.strip()
+    audio = OpenAI.gen_audio(story)
+
+    if 'error' in audio.keys():
+        # wait for 1min and try again
+        num_tries = 0
+        while num_tries < 3:
+            time.sleep(15)
+            audio = OpenAI.gen_audio(story)
+            if 'error' in audio.keys():
+                num_tries += 1
+            else:
+                break
+
+        if num_tries == 3:
+            return jsonify({'error': 'Error generating audios.', 'audio': audio})
+
+    with open(f'exercises/{exercise_id}/audios/story.wav', 'wb') as f:
+        f.write(audio['data'].getvalue())
+
+    # get the audio for each phrase
+    for i, phrase in enumerate(phrases):
+        # check that the audio doesn't start with a number
+        if phrase[0].isdigit():
+            phrase = phrase[2:]
+
+        phrase = phrase.strip()
+        audio = OpenAI.gen_audio(phrase)
+
+        if 'error' in audio.keys():
+            # wait for 1min and try again
+            num_tries = 0
+            while num_tries < 3:
+                time.sleep(15)
+                audio = OpenAI.gen_audio(phrase)
+                if 'error' in audio.keys():
+                    num_tries += 1
+                else:
+                    break
+
+            if num_tries == 3:
+                return jsonify({'error': 'Error generating audios.', 'audio': audio})
+
+        with open(f'exercises/{exercise_id}/audios/phrases/{i + 1}.wav', 'wb') as f:
+            f.write(audio['data'].getvalue())
+
+    # get the audio for each compound noun
+    for i, noun in enumerate(compound_nouns):
+        # check that the audio doesn't start with a number
+        if noun[0].isdigit():
+            noun = noun[2:]
+
+        noun = noun.strip()
+        audio = OpenAI.gen_audio(noun)
+
+        if 'error' in audio.keys():
+            # wait for 1min and try again
+            num_tries = 0
+            while num_tries < 3:
+                time.sleep(15)
+                audio = OpenAI.gen_audio(noun)
+                if 'error' in audio.keys():
+                    num_tries += 1
+                else:
+                    break
+
+            if num_tries == 3:
+                return jsonify({'error': 'Error generating audios.', 'audio': audio})
+
+        with open(f'exercises/{exercise_id}/audios/compound_nouns/{i + 1}.wav', 'wb') as f:
+            f.write(audio['data'].getvalue())
 
 
 @app.route('/', methods=['GET'])
@@ -193,16 +296,38 @@ def gen_description_exercise():
 
     kwargs = request.get_json(force=True)
     profile = kwargs.get("profile")
+    speech_focus = kwargs.get("speech_focus")
+    interests = kwargs.get("patient_interests")
 
     if profile:
         profile = profile_handler.get_profile(kwargs.get("profile"))
     else:
         profile = {}
 
-    print(profile)
+    print(profile, speech_focus, interests)
 
     openai = OpenAI(profile)
-    answer = openai.gen_image_description_exercise()
+    answer = openai.gen_image_description_exercise(speech_focus, interests)
+
+    """answer = {
+        'content': {
+            "description": 'Test description',
+            "story": 'Once upon a time, deep in the heart of a magical forest, there stood a wise old tree. This tree was different from all the others; its trunk twisted and turned like a winding path. Its branches reached out in every direction, inviting the creatures of the forest to come and play. One sunny day, a curious squirrel named Sammy decided to visit the old tree. Sammy\'s favorite pastime was collecting acorns, and he had heard that this particular tree had the biggest and juiciest ones. As Sammy scampered up the branches, he couldn\'t help but marvel at the beautiful flowers that adorned a small wooden bench nearby. It was the perfect spot to take a break! Sammy settled down on the bench and enjoyed the breathtaking view. The forest seemed to come alive with chirping birds and rustling leaves. Rays of sunlight danced through the green canopy, creating a magical atmosphere. Sammy relished every moment, feeling grateful for the wonders of nature. With his little paws clutching the acorn tightly, he decided to head back home, his heart filled with joy and his belly full of acorn delight.',
+            "image_url": 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-CgV2X5BRb12i6vu5jA2cnMR2/user-60bG8owWKytSMFFKr2IP4ahP/img-S2kaPv2SwiLmaDLbZ2APls91.png?st=2023-12-12T22%3A22%3A18Z&se=2023-12-13T00%3A22%3A18Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-12-12T23%3A17%3A00Z&ske=2023-12-13T23%3A17%3A00Z&sks=b&skv=2021-08-06&sig=/%2BgUAufLlOYPALyKFGvMtEkBY5BOzg3yEo7khd/aecc%3D',
+            "phrases": ['The tree in the image has a crooked trunk.',
+                        'The squirrel in the image is holding an acorn.',
+                        'There is a small wooden bench decorated with colorful flowers.',
+                        'The forest behind the tree is filled with tall trees and lush vegetation.',
+                        'Rays of sunlight shine through the foliage, creating a warm glow.',
+                        'The image depicts a whimsical forest scene.'
+                        ],
+            "compound_nouns": ['Acorn collector',
+                               'Crooked trunk',
+                               'Colorful flower bench',
+                               'Sunlit forest'],
+        }
+    }"""
+
     return answer
 
 
@@ -236,6 +361,56 @@ def gen_audio():
     return response
 
 
+@app.route('/save_exercise', methods=['POST'])
+def save_exercise():
+    print('Saving exercise...')
+    if request.method != 'POST':
+        return jsonify({'error': 'Invalid request method.'})
+
+    kwargs = request.get_json(force=True)
+    story = kwargs.get("story")
+    description = kwargs.get("description")
+    image_url = kwargs.get("image_url")
+    phrases = kwargs.get("phrases").split(',')
+    compound_nouns = kwargs.get("compound_nouns").split(',')
+
+    # get the id of the exercise, which is the number of folders in the exercises folder + 1
+    exercise_id = len(os.listdir('exercises')) - 4 + 1
+    exercise_folder = f'exercises/{exercise_id}'
+
+    # create the folder
+    os.mkdir(exercise_folder)
+
+    # save the description
+    with open(f'{exercise_folder}/description.txt', 'w') as f:
+        f.write(description)
+
+    # save the story
+    with open(f'{exercise_folder}/story.txt', 'w') as f:
+        f.write(story)
+
+    # save the image
+    # retrieve the image from the url
+    image_data = requests.get(image_url).content
+    with open(f'{exercise_folder}/image.png', 'wb') as f:
+        f.write(image_data)
+
+    # save the phrases
+    with open(f'{exercise_folder}/phrases.txt', 'w') as f:
+        f.write('\n'.join(phrases))
+
+    # save the compound nouns
+    with open(f'{exercise_folder}/compound_nouns.txt', 'w') as f:
+        f.write('\n'.join(compound_nouns))
+
+    print('Exercise saved successfully.')
+    # create a thread to generate the audios
+    thread = Thread(target=gen_audios, args=(exercise_id,))
+    thread.start()
+
+    return jsonify({'content': 'Exercise saved successfully.'})
+
+
 @app.route('/gen_audios_for_exercise', methods=['POST'])
 def gen_audios_for_exercise():
     if request.method != 'POST':
@@ -244,104 +419,7 @@ def gen_audios_for_exercise():
     kwargs = request.get_json(force=True)
     exercise_id = kwargs.get("exercise_id")
 
-    # check that the exercise exists in the exercises collection
-    if not os.path.exists(f'exercises/{exercise_id}'):
-        return jsonify({'error': 'Exercise does not exist.'})
-
-    # get the exercise phrases and compound nouns
-    phrases = []
-    compound_nouns = []
-    with open(f'exercises/{exercise_id}/phrases.txt', 'r') as f:
-        phrases = f.readlines()
-    with open(f'exercises/{exercise_id}/compound_nouns.txt', 'r') as f:
-        compound_nouns = f.readlines()
-
-    # load story
-    story = ''
-    with open(f'exercises/{exercise_id}/story.txt', 'r') as f:
-        story = f.read()
-
-    # create or replace the audios folder
-    if os.path.exists(f'exercises/{exercise_id}/audios'):
-        shutil.rmtree(f'exercises/{exercise_id}/audios')
-    os.mkdir(f'exercises/{exercise_id}/audios')
-
-    # create the phrases and compound_nouns folders
-    os.mkdir(f'exercises/{exercise_id}/audios/phrases')
-    os.mkdir(f'exercises/{exercise_id}/audios/compound_nouns')
-
-    # get the audio for the story
-    story = story.strip()
-    audio = OpenAI.gen_audio(story)
-
-    if 'error' in audio.keys():
-        # wait for 1min and try again
-        num_tries = 0
-        while num_tries < 3:
-            time.sleep(15)
-            audio = OpenAI.gen_audio(story)
-            if 'error' in audio.keys():
-                num_tries += 1
-            else:
-                break
-
-        if num_tries == 3:
-            return jsonify({'error': 'Error generating audios.', 'audio': audio})
-
-    with open(f'exercises/{exercise_id}/audios/story.wav', 'wb') as f:
-        f.write(audio['data'].getvalue())
-
-    # get the audio for each phrase
-    for i, phrase in enumerate(phrases):
-        # check that the audio doesn't start with a number
-        if phrase[0].isdigit():
-            phrase = phrase[2:]
-
-        phrase = phrase.strip()
-        audio = OpenAI.gen_audio(phrase)
-
-        if 'error' in audio.keys():
-            # wait for 1min and try again
-            num_tries = 0
-            while num_tries < 3:
-                time.sleep(15)
-                audio = OpenAI.gen_audio(phrase)
-                if 'error' in audio.keys():
-                    num_tries += 1
-                else:
-                    break
-
-            if num_tries == 3:
-                return jsonify({'error': 'Error generating audios.', 'audio': audio})
-
-        with open(f'exercises/{exercise_id}/audios/phrases/{i + 1}.wav', 'wb') as f:
-            f.write(audio['data'].getvalue())
-
-    # get the audio for each compound noun
-    for i, noun in enumerate(compound_nouns):
-        # check that the audio doesn't start with a number
-        if noun[0].isdigit():
-            noun = noun[2:]
-
-        noun = noun.strip()
-        audio = OpenAI.gen_audio(noun)
-
-        if 'error' in audio.keys():
-            # wait for 1min and try again
-            num_tries = 0
-            while num_tries < 3:
-                time.sleep(15)
-                audio = OpenAI.gen_audio(noun)
-                if 'error' in audio.keys():
-                    num_tries += 1
-                else:
-                    break
-
-            if num_tries == 3:
-                return jsonify({'error': 'Error generating audios.', 'audio': audio})
-
-        with open(f'exercises/{exercise_id}/audios/compound_nouns/{i + 1}.wav', 'wb') as f:
-            f.write(audio['data'].getvalue())
+    gen_audios(exercise_id)
 
     return jsonify({'content': 'Audios generated successfully.'})
 

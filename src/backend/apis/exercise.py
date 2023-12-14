@@ -16,12 +16,12 @@ class Exercise:
         self.profile = profile
         self.interests = ["soccer", "running", "art", "music", "school"]
 
-    def gen_image_description(self) -> str:
+    def gen_image_description(self, speech_focus, interests) -> str:
         """Returns the image description prompt."""
         prompt = f"""Generate the description of an image suited for a very creative story for a speech therapy patient to describe, with various objects and/or characters to describe.
-The patient will have to repeat aloud at least 10 phrases. The first 6 phrases should be a statement about the image. The next 4 should be compound nouns that emphasize the patient's difficulties, and reflect the image description. 
+The patient will have to repeat aloud at least 10 phrases. The first 6 phrases should be a statement about the image. The next 4 should be tongue twisters as coumpound nouns that emphasize the patient's difficulties, and reflect the image description. 
 
-The phrases should tackle: {' and '.join(self.profile.difficulties) if self.profile else "difficulty pronouncing r"}. 
+The phrases should tackle: {speech_focus}. Try to include the patient's interests, such as: {interests}.
 Do not mention the patient's difficulties in any of the phrases nor in the story. The language of the story should be simple and easy to understand. The story should be one paragraph long, and not focus on describing the image, but rather on telling a story that includes the image.
 
 
