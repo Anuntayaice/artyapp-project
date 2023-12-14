@@ -4,13 +4,52 @@
   border: none;
   border-bottom: 1px solid hsla(120, 100%, 99%, 0.4);
   margin-bottom: 30px;
-  border-radius: 0;
+  border-radius: 4px;
   padding: 5px;
   color: white;
   font-size: 14px;
 }
-  .custom-input:focus {
-    background: transparent; 
-    outline: none; /* Remove the default focus outline */
-  
+
+.custom-input:focus {
+  background: rgba(255, 255, 255, 0.3); 
+  outline: none;
+  border-radius: 2px; 
+}
+
+.custom-input.multi-row {
+  background: rgba(255, 255, 255, 0.3); /* White with 30% opacity for multiple rows */
+}
+.checkbox-container {
+  display: flex;
+}
+
+.checkbox-label {
+  margin-left: 8px;
+  line-height: 20px; /* Adjust the line-height as needed */
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center; /* Align items to the center */
+}
+
+.checkbox {
+  cursor: pointer;
+  margin-right: 12px;
+}
+
+.checkbox-check {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.checkbox-check.checked {
+  background-color: #FAF45A;
+  color: black;
 }

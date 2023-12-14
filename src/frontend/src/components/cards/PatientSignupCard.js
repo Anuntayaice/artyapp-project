@@ -38,7 +38,7 @@ function PatientSignupCard() {
           >
             Date of Birth
           </Form.Label>
-          <Form.Control type="date" className="custom-input text-dark" />
+          <Form.Control type="date" className="custom-input text-black" />
           <Form.Label style={{ float: "left", paddingLeft: "1px" }}>
             Parent Email Address
           </Form.Label>

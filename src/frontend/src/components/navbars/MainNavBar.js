@@ -15,9 +15,17 @@ const MainNavBar = () => {
   const handleNavClick = (section) => {
     setActiveSection(section);
   };
+  const isHomePage = window.location.pathname === "/";
+
   return (
     <div>
-      <Navbar className="bg-secondary custom-font " style={{ height: "8em" }}>
+      <Navbar
+        className={`custom-font ${isHomePage ? "" : "bg-secondary"}`}
+        style={{
+          height: "8em",
+          backgroundImage: isHomePage ? 'url("/images/mainbg.png")' : "none",
+        }}
+      >
         <Container>
           <Navbar.Brand href="/">
             <Image
@@ -26,7 +34,6 @@ const MainNavBar = () => {
               className=" mx-5"
             />
           </Navbar.Brand>{" "}
-
           <Navbar.Brand
             href="/exerciselist"
             active={
@@ -52,11 +59,11 @@ const MainNavBar = () => {
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end navbar-icons">
             <Nav.Link
-                className="d-flex align-items-center m-3"
-                //href="/login"
-                active={activeSection === "login"}
-                onClick={() => handleNavClick("login")}
-              >
+              className="d-flex align-items-center m-3"
+              //href="/login"
+              active={activeSection === "login"}
+              onClick={() => handleNavClick("login")}
+            >
               <FaGear />
             </Nav.Link>
             <Nav.Link
