@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { Row, Col, Card, Image, Button } from "react-bootstrap";
+import { Row, Col, Card, Image, Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const PatientInfo = () => {
@@ -19,9 +19,11 @@ const PatientInfo = () => {
   };
 
   return (
+    
     <div
       className="bg-dark vh-100 pt-4 px-4"
     >
+      <Container>
       <Card
         style={{ maxHeight: "20em" }}
         className="border-0 mb-3 d-flex flex-column justify-content-center align-items-start px-4 py-4"
@@ -40,8 +42,8 @@ const PatientInfo = () => {
         </div>
         <div className="text-start mb-3">
           {" "}
+          <h6>Speech condition: {patient.patientCondition} </h6>
           <h6 className="my-4">Symptoms : {patient.patientSymptoms} </h6>
-          <h6>Speech condition: {patient.patientSymptoms} </h6>
         </div>
       </Card>
       <Row>
@@ -51,7 +53,7 @@ const PatientInfo = () => {
             style={{ height: "15em" }}
             className="border-0 mb-3 d-flex flex-column justify-content-start align-items-start px-4 py-4"
           >
-            <h4>Progress</h4>
+            <h4>Progress - WIP</h4>
           </Card>
         </Col>{" "}
         <Col>
@@ -59,14 +61,18 @@ const PatientInfo = () => {
           <Card
             style={{ height: "15em" }}
             className="border-0 mb-3 d-flex flex-column justify-content-start align-items-start px-4 py-4"
-          ></Card>
+          >
+            <p>WIP</p>
+          </Card>
         </Col>{" "}
         <Col>
           {" "}
           <Card
             style={{ height: "15em" }}
             className="border-0 mb-3 d-flex flex-column justify-content-start align-items-start px-4 py-4"
-          ></Card>
+          >
+            <p>WIP</p>
+          </Card>
         </Col>{" "}
       </Row>
 
@@ -77,6 +83,7 @@ const PatientInfo = () => {
       >
         Click here to view exercises
       </Button>
+      </Container>
     </div>
   );
 };

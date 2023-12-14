@@ -16,7 +16,7 @@ const ExGenPreviewCard = ({ id, title, time, level, img }) => {
         height: "28rem",
         backgroundColor: "rgba(255, 255, 255, 0.2)",
       }}
-      className="d-flex flex-column align-items-center justify-content-center border-0 mx-4 text-white"
+      className="d-flex flex-column align-items-center justify-content-center border-0 text-white"
     >
       <Card.Img
         variant="top"

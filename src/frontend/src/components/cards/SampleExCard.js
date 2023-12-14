@@ -6,7 +6,7 @@ import "../../css/ExCard.css";
 //import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
 import { useReactMediaRecorder } from "react-media-recorder";
 import { ColorRing } from  'react-loader-spinner'
-import { FaMicrophone, FaStop, FaPlay } from "react-icons/fa";
+import { FaMicrophone, FaStop, FaVolumeUp } from "react-icons/fa";
 import { useGlobalAudioPlayer } from 'react-use-audio-player';
 import Carousel from 'react-bootstrap/Carousel';
 import Modal from 'react-bootstrap/Modal';
@@ -118,6 +118,13 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
       'None': 'green',
     }
 
+    const mistake_simplified = {
+      'Mispronunciation': 'Said Differently',
+      'Omission': 'Forgot to say',
+      'Insertion': 'Said extra word',
+      'None': 'None',
+    }
+
     return pronouncedWords.map((word, index) => {
       if (index === 0) {
         // capitalize first word
@@ -134,7 +141,7 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
       } else {
         return (
           <>
-            <a className='tooltip-mistake' style={{color: mistake_colors[word.errorType], cursor: 'pointer'}} data-tooltip-id={`${index}-anchor`} data-tooltip-content={word.errorType}>
+            <a className='tooltip-mistake' style={{color: mistake_colors[word.errorType], cursor: 'pointer'}} data-tooltip-id={`${index}-anchor`} data-tooltip-content={mistake_simplified[word.errorType]}>
             {`${word.word}${index === pronouncedWords.length - 1 ? '.' : ' '}`} 
             </a>
             <Tooltip id={`${index}-anchor`} />
@@ -279,7 +286,7 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
               { isReady && (
                     <div className="audio-wrapper">
                       {(stopped || paused) && (
-                        <FaPlay onClick={play} />
+                        <FaVolumeUp onClick={play} />
                       )}
                       {playing && (
                         <FaStop onClick={stop} />

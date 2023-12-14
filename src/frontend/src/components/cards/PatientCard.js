@@ -2,14 +2,13 @@ import React from "react";
 import { Card, Image, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "../../css/PatientCard.css";
-const PatientCard = ({ id, name, symptoms, exercise, img, description ,age }) => {
+const PatientCard = ({ id, name, symptoms, condition, img, age }) => {
   const patient = {
     patientId: id,
     patientName: name,
     patientSymptoms: symptoms,
-    patientExercise: exercise,
+    patientCondition: condition,
     patientImg: img,
-    patientDescription: description,
     patientAge: age,
   };
   return (
@@ -29,19 +28,19 @@ const PatientCard = ({ id, name, symptoms, exercise, img, description ,age }) =>
           </Col>
           <Col md={2} className="d-flex flex-column align-items-start">
             {" "}
-            <h4>{name}</h4> <h6 style={{ color: "grey" }}>{description}</h6>{" "}
+            <h4>{name}</h4> <h6 style={{ color: "grey" }}>{age} years old</h6>{" "}
           </Col>
-          <Col md={2} style={{ maxHeight: "3em", overflow: "hidden" }}>
-            {" "}
-            <h5>{symptoms}</h5>
-          </Col>{" "}
           <Col md={2} style={{ maxHeight: "3em", overflow: "hidden" }}>
             {" "}
             <h5>
-              {exercise}
+              {condition}
             </h5>
           </Col>
-          <Col className="d-flex align-items-end justify-content-end " md={4}>
+          <Col md={5} style={{ maxHeight: "3em", overflow: "hidden"}}>
+            {" "}
+            <h5 style={{fontSize: '1em'}}>{symptoms}</h5>
+          </Col>{" "}
+          <Col className="d-flex align-items-end justify-content-end " md={1}>
             {" "}
             <Image src="images/info.png" style={{ maxWidth: "2em" }} />{" "}
           </Col>

@@ -7,9 +7,8 @@ const PatientListPage = () => {
     {
       id: 1,
       name: "John Doe",
-      description: "description",
-      symptoms: "Lorem ipsum dolor sit amet,t dolore magna ",
-      exercise: "Hypertension",
+      condition: "Social Anxiety",
+      symptoms: "Difficulty pronouncing words, slurred speech",
       img: "profile1.png",
       age: "13",
     },
@@ -19,10 +18,9 @@ const PatientListPage = () => {
     {
       id: 5,
       name: "Jane Smith",
-      description: "description",
+      condition: "Diagnosed with CAS",
       symptoms:
-        " consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore e",
-      exercise: "Diabetes",
+        "Can't pronounce words with the 's' sound, voicing errors",
       img: "profile3.png",
       age: "15",
     },
@@ -32,37 +30,38 @@ const PatientListPage = () => {
     {
       id: 9,
       name: "Bob Johnson",
+      condition: "Slight stuttering",
       symptoms:
-        " consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore e",
-      exercise: "Arthritis",
+        "Difficulty stressing words",
       img: "profile2.png",
       age: "10",
     },
   ];
 
-  const patientData5 = [
+  const patientData4 = [
     {
       id: 17,
       name: "Charlie Wilson",
-      description: "description",
-      symptoms: "Lorem ipsum dolor sit amet,t dolore magna ",
-      exercise: "Migraine",
+      condition: "Diagnosed with CAS",
+      symptoms:
+        "Vowel distortions, trouble moving from syllable to syllable",
       img: "profile1.png",
       age: "12",
     },
   ];
-
+  
   const allPatients = [
     ...patientData1,
     ...patientData2,
     ...patientData3,
-    ...patientData5,
+    ...patientData4,
   ];
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPatients, setFilteredPatients] = useState(allPatients);
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
     const filtered = allPatients.filter((patient) =>
       patient.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -82,25 +81,29 @@ const PatientListPage = () => {
       <Container>
         <Row className="mb-3 d-flex align-items-center">
           <Col md={9} className="position-relative">
-            <Form.Control
-              type="text"
-              placeholder="Search by name"
-              className="mr-sm-2 pr-5 mb-3"
-              value={searchTerm}
-              style={{ height: "3em", borderRadius: "16px" }}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Button
-              variant="link"
-              className="position-absolute top-50 end-0 translate-middle-y "
-              onClick={handleSearch}
-            >
-              <Image
-                src="images/searchIcon.png"
-                style={{ maxWidth: "2em" }}
-                className="mb-3 mx-2"
+            <Form onSubmit={handleSearch}>
+              <Form.Control
+                type="text"
+                placeholder="Search by name"
+                className="mr-sm-2 pr-5 mb-3"
+                value={searchTerm}
+                style={{ height: "3em", borderRadius: "16px" }}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
-            </Button>
+              <Button
+                variant="link"
+                type="submit"
+                className="position-absolute top-50 end-0 translate-middle-y "
+                //onClick={handleSearch}
+              >
+                <Image
+                  src="images/searchIcon.png"
+                  style={{ maxWidth: "2em" }}
+                  className="mb-3 mx-2"
+                />
+              </Button>
+            </Form>
+            
           </Col>
           <Col md={1}>
             <Button

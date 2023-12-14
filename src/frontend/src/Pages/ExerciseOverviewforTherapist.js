@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
-import ExGenPreviewCard from "../components/cards/ExGenPreviewCard";
 import ExerciseCreationCard from "../components/cards/ExerciseCreationCard";
 
 const ExerciseOverviewforTherapist = () => {
   const [exerciseData, setExerciseData] = useState([
-    {
+    /*{
       id: 3,
       title: "Flash card",
       time: "12 minutes",
@@ -19,6 +18,13 @@ const ExerciseOverviewforTherapist = () => {
       time: "12 minutes",
       level: "beginner",
       img: "/images/details2.png",
+    },*/
+    {
+      id: 1,
+      title: "Talk Tales",
+      time: "10 minutes",
+      level: "beginner",
+      img: "/images/details3.png",
     },
   ]);
 
@@ -32,15 +38,8 @@ const ExerciseOverviewforTherapist = () => {
 
   const renderExerciseCards = () => {
     return exerciseData.map((exercise) => (
-      <Col key={exercise.id} md={4} sm={6} xs={12} className="mb-3">
-        <ExGenPreviewCard
-          id={exercise.id}
-          title={exercise.title}
-          time={exercise.time}
-          level={exercise.level}
-          img={exercise.img}
-          status={exercise.status}
-        />
+      <Col key={exercise.id} md={12} sm={12} xs={12} className="mb-3">
+        <ExerciseCreationCard exercise={exercise}/>
       </Col>
     ));
   };
@@ -53,9 +52,6 @@ const ExerciseOverviewforTherapist = () => {
       <div className="container d-flex justify-content-center align-items-center ">
         <Row className="mt-5 d-flex justify-content-around">
           {renderExerciseCards()}
-          <Col md={4} sm={6} xs={12} className="mb-3">
-            <ExerciseCreationCard  />
-          </Col>
         </Row>
       </div>
     </div>
