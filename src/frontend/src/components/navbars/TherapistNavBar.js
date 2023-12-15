@@ -24,7 +24,10 @@ const TherapistNavBar = () => {
         }}
       >
         <Container>
-          <Navbar.Brand href="/">
+          <Navbar.Brand 
+              href="/therapist-patientlist"
+              onClick={() => handleNavClick("therapist-patientlist")}
+            >
             <Image
               src="/images/artyIcon.png"
               style={{ maxWidth: "9em" }}

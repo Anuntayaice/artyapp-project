@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Row, Dropdown } from "react-bootstrap";
 import ExPreviewCard from "../components/cards/ExPreviewCard";
 import { useState } from "react";
 
 const ExerciseList = () => {
-  const [selectedItem, setSelectedItem] = useState("Select week");
+  const [selectedItem, setSelectedItem] = useState(undefined);
+  const [availableWeeks, setAvailableWeeks] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/get_exercise_ids", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setAvailableWeeks(data);
+      });
+  }, []);
+
   const exerciseData = [
     {
       id: 1,
@@ -48,19 +60,19 @@ const ExerciseList = () => {
           }}
           className="mt-5"
         >
-          {selectedItem}
+          {selectedItem ? `Week ${selectedItem}` : "Select week"}
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          <Dropdown.Item onClick={() => handleItemClick("Week 1")}>
-            Week 1
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => handleItemClick("Week 2")}>
-            Week 2
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => handleItemClick("Week 3")}>
-            Week 3
-          </Dropdown.Item>
+          {availableWeeks?.map((item) => (
+            <Dropdown.Item
+              key={item}
+              onClick={() => handleItemClick(item)}
+              className="custom-font"
+            >
+              Week {item}
+            </Dropdown.Item>
+          ))}
         </Dropdown.Menu>
       </Dropdown>{" "}
       <div className="container d-flex justify-content-center align-items-center ">
@@ -73,6 +85,7 @@ const ExerciseList = () => {
                 level={exercise.level}
                 img={exercise.img}
                 status={exercise.status}
+                week={selectedItem}
               />
             </div>
           ))}

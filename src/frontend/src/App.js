@@ -6,8 +6,7 @@ import PatientSignup from "./Pages/PatientSignup";
 import Home from "./Pages/Home";
 import MainNavBar from "./components/navbars/MainNavBar";
 import ExerciseList from "./Pages/ExerciseList";
-import MainExercise from "./Pages/MainExercise";
-import SampleExercise from "./Pages/SampleExercise";
+import Exercise from "./Pages/Exercise";
 import TherapistNavBar from "./components/navbars/TherapistNavBar";
 import PatientList from "./Pages/PatientList";
 import PatientInfo from "./Pages/PatientInfo";
@@ -17,19 +16,25 @@ import TherapistSignup from "./Pages/TherapistSignup";
 import AddPatient from "./Pages/AddPatient";
 
 function App() {
+  const isHomePage = window.location.pathname === "/";
   const isLoginPage = window.location.pathname === "/login";
   const isTherapistPage = window.location.pathname.startsWith("/therapist");
 
   return (
-      <div className="App">
+      <div className="App" style={{
+        backgroundImage: isHomePage ? 'url("/images/mainbg.png")' : "none",
+        height: "100vh",
+        backgroundSize: '100% auto'
+      }}>
         <BrowserRouter>
-          {isLoginPage || isTherapistPage ? null : <MainNavBar />}
+          {isLoginPage || isTherapistPage || isHomePage ? null : <MainNavBar />}
           {isTherapistPage ? <TherapistNavBar /> : null}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/mainexercise" element={<MainExercise />} />
-            <Route path="/sampleexercise" element={<SampleExercise />} />
+            {/*<Route path="/mainexercise" element={<MainExercise />} />*/}
+            <Route path="/exercise/:id" element={<Exercise />} />
+            {/*<Route path="/sampleexercise" element={<SampleExercise />} */}
             <Route path="/signup" element={<PatientSignup />} />
             <Route
               path="/therapist-signup"

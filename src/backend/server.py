@@ -150,7 +150,7 @@ def get_exercise_audio():
 
     # if type_of_audio is story, return the story audio
     if type_of_audio == 'story':
-        with open(f'exercises/{exercise_id}/story.wav', 'rb') as f:
+        with open(f'exercises/{exercise_id}/audios/story.wav', 'rb') as f:
             audio = f.read()
         response = make_response(audio)
         response.headers['Content-Type'] = 'audio/wav'
@@ -257,6 +257,14 @@ def get_exercise():
     return jsonify(exercise_sequence)
 
 
+@app.route('/get_exercise_ids', methods=['GET'])
+def get_exercise_ids():
+    exercise_ids = os.listdir('exercises')
+    exercise_ids = [
+        exercise_id for exercise_id in exercise_ids if exercise_id.isdigit()]
+    return jsonify(exercise_ids)
+
+
 @app.route('/profile', methods=['GET', 'POST', 'DELETE'])
 def profile():
     kwargs = request.get_json(force=True)
@@ -309,25 +317,6 @@ def gen_description_exercise():
     openai = OpenAI(profile)
     answer = openai.gen_image_description_exercise(speech_focus, interests)
 
-    """answer = {
-        'content': {
-            "description": 'Test description',
-            "story": 'Once upon a time, deep in the heart of a magical forest, there stood a wise old tree. This tree was different from all the others; its trunk twisted and turned like a winding path. Its branches reached out in every direction, inviting the creatures of the forest to come and play. One sunny day, a curious squirrel named Sammy decided to visit the old tree. Sammy\'s favorite pastime was collecting acorns, and he had heard that this particular tree had the biggest and juiciest ones. As Sammy scampered up the branches, he couldn\'t help but marvel at the beautiful flowers that adorned a small wooden bench nearby. It was the perfect spot to take a break! Sammy settled down on the bench and enjoyed the breathtaking view. The forest seemed to come alive with chirping birds and rustling leaves. Rays of sunlight danced through the green canopy, creating a magical atmosphere. Sammy relished every moment, feeling grateful for the wonders of nature. With his little paws clutching the acorn tightly, he decided to head back home, his heart filled with joy and his belly full of acorn delight.',
-            "image_url": 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-CgV2X5BRb12i6vu5jA2cnMR2/user-60bG8owWKytSMFFKr2IP4ahP/img-S2kaPv2SwiLmaDLbZ2APls91.png?st=2023-12-12T22%3A22%3A18Z&se=2023-12-13T00%3A22%3A18Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-12-12T23%3A17%3A00Z&ske=2023-12-13T23%3A17%3A00Z&sks=b&skv=2021-08-06&sig=/%2BgUAufLlOYPALyKFGvMtEkBY5BOzg3yEo7khd/aecc%3D',
-            "phrases": ['The tree in the image has a crooked trunk.',
-                        'The squirrel in the image is holding an acorn.',
-                        'There is a small wooden bench decorated with colorful flowers.',
-                        'The forest behind the tree is filled with tall trees and lush vegetation.',
-                        'Rays of sunlight shine through the foliage, creating a warm glow.',
-                        'The image depicts a whimsical forest scene.'
-                        ],
-            "compound_nouns": ['Acorn collector',
-                               'Crooked trunk',
-                               'Colorful flower bench',
-                               'Sunlit forest'],
-        }
-    }"""
-
     return answer
 
 
@@ -371,8 +360,8 @@ def save_exercise():
     story = kwargs.get("story")
     description = kwargs.get("description")
     image_url = kwargs.get("image_url")
-    phrases = kwargs.get("phrases").split(',')
-    compound_nouns = kwargs.get("compound_nouns").split(',')
+    phrases = kwargs.get("phrases").split('\n')
+    compound_nouns = kwargs.get("compound_nouns").split('\n')
 
     # get the id of the exercise, which is the number of folders in the exercises folder + 1
     exercise_id = len(os.listdir('exercises')) - 4 + 1

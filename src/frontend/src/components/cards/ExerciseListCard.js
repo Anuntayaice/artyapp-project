@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { Card, Form, Button } from "react-bootstrap";
-import { ColorRing } from  'react-loader-spinner'
+import { Button, Image, Row, Col, Accordion, Form } from "react-bootstrap";
+import "../../css/PatientCard.css";
 import { useNavigate } from "react-router-dom";
-import "../../css/CreationCard.css";
+import { ColorRing } from  'react-loader-spinner'
 
-const ExerciseCreationCard = ({ exercise }) => {
+const ExerciseListCard = ({ exercise }) => {
   const navigate = useNavigate();
 
-  const [isFlipped, setIsFlipped] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const createExercise = (e) => {
@@ -33,8 +32,30 @@ const ExerciseCreationCard = ({ exercise }) => {
     }
 
   return (
-    <div>
-      {isLoading && (
+    <Accordion>
+      <Accordion.Item eventKey="0">
+        <Accordion.Header className="my-1 patient-card">
+          <Row className="my-2 d-flex align-items-center justify-content-start mx-3 w-100">
+            <Col md={2}>
+              <Image
+                src={exercise.img}
+                style={{ maxWidth: "6em" }}
+              />
+            </Col>
+            <Col md={6} className="d-flex flex-column align-items-start">
+              {" "}
+              <h4>{exercise.title}</h4> <h6 style={{ color: "grey" }}>{exercise.level}</h6>{" "}
+            </Col>
+            <Col md={4} style={{ maxHeight: "3em", overflow: "hidden" }}>
+              {" "}
+              <h5>
+                {exercise.time}
+              </h5>
+            </Col>
+          </Row>
+        </Accordion.Header>
+        <Accordion.Body>
+        {isLoading && (
         <>
           <div>
             Please wait patiently while the exercise is generated...
@@ -50,50 +71,21 @@ const ExerciseCreationCard = ({ exercise }) => {
           />
         </>
       )}
-      {!isLoading && (
-      <Card
-        className={`card exercise-creation-card d-flex flex-column align-items-center justify-content-center border-0 mx-4 px-5 ${
-          isFlipped ? "card-hover" : ""
-        }`}
-        onMouseEnter={() => setIsFlipped(true)}
-        onMouseLeave={() => setIsFlipped(false)}
-        style={{
-          width: "19rem",
-          height: "28rem",
-          backgroundColor: "rgba(255, 255, 255, 0.2)",
-        }}
-      >
-        <div className="front d-flex align-items-center justify-content-center px-3">
-          <div className="d-flex flex-column align-items-center justify-content-center">
-            <div className="d-flex align-items-center justify-content-center">
-              <img
-                src={exercise.img}
-                alt="exercise"
-                style={{ maxWidth: "7em" }}
-              />
-
-              <div className="d-flex flex-column align-items-center justify-content-center">
-                <div className="d-flex align-items-center justify-content-center">
-                  <h5 className="text-center">{exercise.title}</h5>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="back text-start d-flex align-items-center justify-content-start pt-5 px-3">
-          <Form onSubmit={createExercise}>
-            <Form.Group controlId="speechFocus">
-              <Form.Label>Speech sounds need to be the focus</Form.Label>
+          {(!isLoading && exercise.available) && (
+            <div className="text-start d-flex align-items-center justify-content-start px-3 flex-row">
+          <Form onSubmit={createExercise} className="d-grid w-100">
+            <Form.Group controlId="speechFocus" className="my-2">
+              <Form.Label>Describe what the exercise should tackle, such as sounds or specific words:</Form.Label>
               <Form.Control
                 type="text"
                 name="speech_focus"
                 as="textarea"
                 className="border-2 border-black"
-                rows={3}
+                rows={6}
               />
             </Form.Group>
-            <Form.Group controlId="patientInterest">
-              <Form.Label>Patient’s interest</Form.Label>
+            <Form.Group controlId="patientInterest" className="my-2">
+              <Form.Label>Describe the exercise theme (having in mind the child's interests, for example):</Form.Label>
               <Form.Control
                 as="textarea"
                 type="text"
@@ -109,7 +101,7 @@ const ExerciseCreationCard = ({ exercise }) => {
               <div class="d-flex my-3 align-items-center justify-content-center">
                 <Button
                   class="btn btn-black border-none"
-                  style={{ backgroundColor: "black", color: "white" }}
+                  style={{ backgroundColor: "black", color: "white", height: "3em"}}
                   type="submit"
                 >
                   Generate{" "}
@@ -117,10 +109,17 @@ const ExerciseCreationCard = ({ exercise }) => {
               </div>
             {/*</Link>*/}
           </Form>
-        </div>
-      </Card>)}
-    </div>
+        </div>)}
+        {(!isLoading && !exercise.available) && (
+          <div className="w-100 d-flex justify-content-center align-items-center">
+            Not available yet.
+          </div>
+        )}
+        
+        </Accordion.Body>
+      </Accordion.Item>
+    </Accordion>
   );
 };
 
-export default ExerciseCreationCard;
+export default ExerciseListCard;

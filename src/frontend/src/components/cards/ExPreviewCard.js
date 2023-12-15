@@ -1,14 +1,17 @@
 import React from "react";
 import { Image, Card, Button, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-const ExPreviewCard = ({ title, time, level, img, status }) => {
+const ExPreviewCard = ({ title, time, level, img, status, week }) => {
+  const navigate = useNavigate();
+
   const isClickable = status === "START";
   const buttonVariant = isClickable ? "success" : "";
   const backgroundColor = isClickable ? "" : "rgba(255, 255, 255, 0.5)";
 
   const handleClick = () => {
     if (isClickable) {
-      window.location.href = "/sampleexercise";
+      navigate(`/exercise/${week}`)
     }
   };
   return (
@@ -37,7 +40,7 @@ const ExPreviewCard = ({ title, time, level, img, status }) => {
           </Col>
         </Row>
       </Card.Body>
-      <Button
+      {week && (<Button
         variant={buttonVariant}
         className="my-4"
         style={{
@@ -49,7 +52,7 @@ const ExPreviewCard = ({ title, time, level, img, status }) => {
         disabled={!isClickable}
       >
         {status}
-      </Button>
+      </Button>)}
     </Card>
   );
 };

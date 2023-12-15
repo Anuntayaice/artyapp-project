@@ -124,6 +124,16 @@ class OpenAI(Exercise):
             'COMPOUND NOUNS:\n')[0].split('\n')
         compound_nouns = content.split('COMPOUND NOUNS:\n')[1].split('\n')
 
+        # remove empty phrases or compound nouns
+        phrases = [phrase for phrase in phrases if phrase]
+        compound_nouns = [noun for noun in compound_nouns if noun]
+
+        # if phrase starts with a number, like "1. ", remove it
+        phrases = [phrase[2:].strip() if phrase[0].isdigit()
+                   else phrase for phrase in phrases]
+        compound_nouns = [noun[2:].strip() if noun[0].isdigit()
+                          else noun for noun in compound_nouns]
+
         image = self.gen_dalle(description, self.client)
 
         if 'error' in image.keys():
@@ -139,35 +149,6 @@ class OpenAI(Exercise):
 
             if num_tries == 3:
                 return res
-
-        # get the id of the exercise
-        exercise_id = len(os.listdir('exercises')) + 1
-        exercise_folder = f'exercises/{exercise_id}'
-
-        # create the folder
-        os.mkdir(exercise_folder)
-
-        # save the description
-        with open(f'{exercise_folder}/description.txt', 'w') as f:
-            f.write(description)
-
-        # save the story
-        with open(f'{exercise_folder}/story.txt', 'w') as f:
-            f.write(story)
-
-        # save the phrases
-        with open(f'{exercise_folder}/phrases.txt', 'w') as f:
-            f.write('\n'.join(phrases))
-
-        # save the compound nouns
-        with open(f'{exercise_folder}/compound_nouns.txt', 'w') as f:
-            f.write('\n'.join(compound_nouns))
-
-        # save the image
-        # retrieve the image from the url
-        image_data = requests.get(image['content']['image_url']).content
-        with open(f'{exercise_folder}/image.png', 'wb') as f:
-            f.write(image_data)
 
         return {
             'content': {

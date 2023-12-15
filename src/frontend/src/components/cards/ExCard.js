@@ -13,7 +13,7 @@ import Modal from 'react-bootstrap/Modal';
 import { Tick } from 'react-crude-animated-tick';
 import { Tooltip } from 'react-tooltip';
 
-const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
+const ExCard = ({ imageSrc, exerciseId, exercise }) => {
   const [audio, setAudio] = useState(undefined);
   const [loading, setLoading] = useState(true);
   const [canAdvance, setCanAdvance] = useState(false);
@@ -351,4 +351,4 @@ const SampleExCard = ({ imageSrc, exerciseId, exercise }) => {
   );
 };
 
-export default SampleExCard;
+export default ExCard;

@@ -27,7 +27,7 @@ const LoginCard = () => {
   const handleLogin = () => {
     // Check if the email and password are correct
     if (email === "patient@example.com" && password === "123") {
-      window.location.href = "/";
+      window.location.href = "/exerciselist";
     } else if (email === "therapist@example.com" && password === "123") {
       window.location.href = "/therapist-patientlist";
     } else {

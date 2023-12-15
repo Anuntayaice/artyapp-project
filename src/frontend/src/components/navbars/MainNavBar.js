@@ -23,11 +23,14 @@ const MainNavBar = () => {
         className={`custom-font ${isHomePage ? "" : "bg-secondary"}`}
         style={{
           height: "8em",
-          backgroundImage: isHomePage ? 'url("/images/mainbg.png")' : "none",
+          //backgroundImage: isHomePage ? 'url("/images/mainbg.png")' : "none",
         }}
       >
         <Container>
-          <Navbar.Brand href="/">
+          <Navbar.Brand 
+            href="/exerciselist"
+            onClick={() => handleNavClick("exerciselist")}
+          >
             <Image
               src="/images/artyIcon.png"
               style={{ maxWidth: "9em" }}

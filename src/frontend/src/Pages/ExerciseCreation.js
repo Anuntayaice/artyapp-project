@@ -3,6 +3,7 @@ import { Card, Button, Row, Col, Image } from "react-bootstrap";
 import Carousel from "react-bootstrap/Carousel";
 import { ColorRing } from  'react-loader-spinner'
 import {useLocation, useNavigate} from 'react-router-dom';
+import { FaEdit } from "react-icons/fa";
 import ContentEditable from 'react-contenteditable';
 
 const ExerciseCreation = () => {
@@ -28,8 +29,12 @@ const ExerciseCreation = () => {
   const saveExercise = () => {
     setLoading(true);
     const formData = new FormData();
-    const parsedCompoundNouns = compoundNouns.map((noun) => getText(noun));
-    const parsedPhrase = phrases.map((phrase) => getText(phrase));
+    let parsedCompoundNouns = compoundNouns.map((noun) => getText(noun));
+    let parsedPhrase = phrases.map((phrase) => getText(phrase));
+    // convert the parsedPhrases to a string seperated by newlines
+    parsedPhrase = parsedPhrase.join("\n");
+    parsedCompoundNouns = parsedCompoundNouns.join("\n");
+    
     formData.append("story", getText(story));
     formData.append("compound_nouns", parsedCompoundNouns);
     formData.append("phrases", parsedPhrase);
@@ -60,15 +65,17 @@ const ExerciseCreation = () => {
   }, []);
 
   const onCompoundNounChange = (index) => (evt) => {
-    const newCompoundNouns = [...compoundNouns];
-    newCompoundNouns[index] = evt.currentTarget.innerHTML;
-    setCompoundNouns(newCompoundNouns);
+    setCompoundNouns((old) => {
+      old[index] = evt.currentTarget.innerHTML;
+      return old;
+    });
   }
 
   const onPhraseChange = (index) => (evt) => {
-    const newPhrases = [...phrases];
-    newPhrases[index] = evt.currentTarget.innerHTML;
-    setPhrases(newPhrases);
+    setPhrases((old) => {
+      old[index] = evt.currentTarget.innerHTML;
+      return old;
+      });
   }
 
   console.log(story, compoundNouns, phrases)
@@ -76,25 +83,27 @@ const ExerciseCreation = () => {
   if (loading) {
     return (
       <>
-        <div>
+        <div
+          className="bg-dark pt-4 px-4 text-white d-flex justify-content-center align-items-center h-100"
+        >
           The exercise is being saved...
+          <ColorRing
+            visible={loading}
+            height="80"
+            width="80"
+            ariaLabel="blocks-loading"
+            wrapperStyle={{}}
+            wrapperClass="blocks-wrapper"
+            colors={['#6b89b2', '#9ac5ff', '#6b89b2', '#9ac5ff', '#6b89b2']}
+          />
         </div>
-        <ColorRing
-          visible={loading}
-          height="80"
-          width="80"
-          ariaLabel="blocks-loading"
-          wrapperStyle={{}}
-          wrapperClass="blocks-wrapper"
-          colors={['#6b89b2', '#9ac5ff', '#6b89b2', '#9ac5ff', '#6b89b2']}
-        />
       </>
     )
   }
 
   return (
     <div
-      className="bg-dark vh-100 pt-4 px-4 text-white d-flex justify-content-center align-items-center"
+      className="bg-dark pt-4 px-4 text-white d-flex justify-content-center align-items-center"
     >
       <Card
         className="text-center mb-5 pt-4 mt-3"
@@ -102,6 +111,7 @@ const ExerciseCreation = () => {
           width: "80rem",
           minWidth: "75em",
           maxHeight: "42rem",
+          marginBottom: "0",
           borderRadius: "16px",
           backgroundColor: "rgba(232, 230, 230, 0.2)",
         }}
@@ -150,7 +160,9 @@ const ExerciseCreation = () => {
                                 spellCheck="false"
                                 onChange={onPhraseChange(index)}
                                 onBlur={onPhraseChange(index)}
-                                html={phrase} />
+                                html={phrase} 
+                                key={index}
+                                />
                             ))}
                           </div>
                         </div>
@@ -168,13 +180,20 @@ const ExerciseCreation = () => {
                                 spellCheck="false"
                                 onChange={onCompoundNounChange(index)}
                                 onBlur={onCompoundNounChange(index)}
-                                html={noun} />
+                                html={noun} 
+                                key={index}
+                                />
                             ))}
                           </div>
                         </div>
                       </div>
                     </Carousel.Item>
                 </Carousel>
+                <div className="edit-wrapper">
+                  <div className="edit-content">
+                    Click on the text to edit!
+                  </div>
+                </div>
               </div>
               <div
                 className="d-flex justify-content-between mt-auto mb-5"

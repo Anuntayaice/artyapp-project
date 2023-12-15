@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import SampleExCard from "../components/cards/SampleExCard";
-const SampleExercise = () => {
-  const exercise_id = 1;
+import ExCard from "../components/cards/ExCard";
+import { useParams } from "react-router-dom";
+
+const Exercise = () => {
+  const { id: exercise_id } = useParams();
 
   const [exercise, setExercise] = useState([]);
   const [imageSrc, setImageSrc] = useState(undefined);
@@ -29,10 +31,10 @@ const SampleExercise = () => {
   return (
     <div className="bg-secondary d-flex align-items-start justify-content-center">
       {exercise.length !== 0 && (
-        <SampleExCard imageSrc={imageSrc} exerciseId={exercise_id} exercise={exercise} />
+        <ExCard imageSrc={imageSrc} exerciseId={exercise_id} exercise={exercise} />
       )}
     </div>
   );
 };
 
-export default SampleExercise;
+export default Exercise;

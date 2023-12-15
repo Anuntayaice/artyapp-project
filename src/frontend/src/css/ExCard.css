@@ -143,3 +143,23 @@
     overflow: visible;
     margin: 0;
 }
+
+.edit-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.edit-content {
+    background: #6b7c91;
+    font-size: 0.8em;
+    border-radius: 0.3em;
+    color: white;
+    padding: 0.5em;
+    margin-top: 1em;
+}
+
+.exercise-gen-text {
+    font-size: 1.5em;
+}
