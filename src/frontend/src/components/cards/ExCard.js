@@ -296,10 +296,15 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
               </div>
               <div className="d-flex justify-content-center align-items-center">
                 { isSpeechExercise && !loadingAssessment && (
-                  <div className="microphone-wrapper">
+                  <div className="microphone-wrapper" onClick={() => {
+                    if (status === "idle" || status === "stopped")
+                      startRecording();
+                    else if (status === "recording")
+                      stopRecording();
+                  }}>
                     {canAdvance ? (<Tick size={70} />) : (
-                    (status === "idle" || status === "stopped") ? <FaMicrophone onClick={startRecording}/> : 
-                    (status === "recording" && <FaStop onClick={stopRecording}/>))}
+                    (status === "idle" || status === "stopped") ? <FaMicrophone/> : 
+                    (status === "recording" && <FaStop/>))}
                   </div>
                 )}
                 { isSpeechExercise && loadingAssessment && (
@@ -339,7 +344,7 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
       >
         <Modal.Body className="mistake-body">
           <div className="mistake-info">Whoops! Seems you made a mistake! Hover the words to see what you did wrong!</div>
-          <div className="text-content-normal mistake-text">
+          <div className="text-content-normal mistake-text flex-wrap">
             {getAnchorsAndTooltips()}
           </div>
         </Modal.Body>

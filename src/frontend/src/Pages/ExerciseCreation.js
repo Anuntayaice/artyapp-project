@@ -34,7 +34,7 @@ const ExerciseCreation = () => {
     // convert the parsedPhrases to a string seperated by newlines
     parsedPhrase = parsedPhrase.join("\n");
     parsedCompoundNouns = parsedCompoundNouns.join("\n");
-    
+
     formData.append("story", getText(story));
     formData.append("compound_nouns", parsedCompoundNouns);
     formData.append("phrases", parsedPhrase);
@@ -84,9 +84,9 @@ const ExerciseCreation = () => {
     return (
       <>
         <div
-          className="bg-dark pt-4 px-4 text-white d-flex justify-content-center align-items-center h-100"
+          className="bg-dark pt-4 px-4 text-white d-flex flex-column justify-content-start align-items-center h-100"
         >
-          The exercise is being saved...
+          <p className="exercise-gen-text">The exercise is being saved...</p>
           <ColorRing
             visible={loading}
             height="80"
