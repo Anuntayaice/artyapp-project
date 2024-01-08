@@ -44,7 +44,7 @@ const ExerciseOverviewforTherapist = () => {
 
   return (
     <div
-      className="bg-dark py-4 px-4 text-white"
+      className="bg-dark pt-4  px-4 text-white"
     >
       <h2>Select New Exercise Type</h2>
       <div className="container d-flex justify-content-center align-items-center ">
