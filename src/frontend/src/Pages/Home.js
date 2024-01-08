@@ -1,22 +1,16 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import { Image } from "react-bootstrap";
 
 const Home = () => {
   const backgroundStyle = {
-    //backgroundImage: 'url("/images/mainbg.png")',
-    //backgroundRepeat: "no-repeat",
-    //backgroundPosition: "center",
-    //height: "calc(100vh - 3em)", 
     display: "flex",
     justifyContent: "start",
     alignItems: "start",
     color: "white",
   };
-  const navigate = useNavigate();
    const handleClick = () => {
-     navigate(`/login`);
+     window.location.href = "/login";
    };
 
   return (

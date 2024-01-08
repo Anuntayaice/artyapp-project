@@ -3,18 +3,19 @@ import { Card, Button, Row, Col, Image } from "react-bootstrap";
 import Carousel from "react-bootstrap/Carousel";
 import { ColorRing } from  'react-loader-spinner'
 import {useLocation, useNavigate} from 'react-router-dom';
-import { FaEdit } from "react-icons/fa";
+import { FaArrowsRotate } from "react-icons/fa6";
 import ContentEditable from 'react-contenteditable';
 
 const ExerciseCreation = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.state)
-  const exercise = location.state.exercise.content;
+  const exercise = location.state.exercise;
+  const exercise_id = location.state.exercise_id;
   const [story, setStory] = React.useState(exercise.story);
   const [compoundNouns, setCompoundNouns] = React.useState(exercise.compound_nouns);
   const [phrases, setPhrases] = React.useState(exercise.phrases);
   const [loading, setLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const goBack = () => {
     window.history.back();
@@ -34,12 +35,16 @@ const ExerciseCreation = () => {
     // convert the parsedPhrases to a string seperated by newlines
     parsedPhrase = parsedPhrase.join("\n");
     parsedCompoundNouns = parsedCompoundNouns.join("\n");
-
+    if (exercise_id) {
+      formData.append("exercise_id", exercise_id);
+    }
     formData.append("story", getText(story));
     formData.append("compound_nouns", parsedCompoundNouns);
     formData.append("phrases", parsedPhrase);
     formData.append("image_url", exercise.image_url);
     formData.append("description", exercise.description);
+    formData.append("speech_focus", exercise.speech_focus);
+    formData.append("interests", exercise.interests);
     console.log(formData);
     fetch("http://localhost:5000/save_exercise", {
       method: "POST",
@@ -56,9 +61,32 @@ const ExerciseCreation = () => {
         console.log(data);
         setLoading(false);
         // navigate to the exercise page
-        navigate(`/therapist-patientlist`);
+        navigate(`/exercises`);
       });
   }
+
+  const genImage = () => {
+    setIsLoading(true);
+    fetch("http://localhost:5000/gen_image", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({text: getText(story)}),
+    }).then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+    }).then((data) => {
+        console.log(data);
+        // navigate to the exercise page
+        exercise.image_url = data.content.image_url;
+        setIsLoading(false);
+      });
+  }
+
+  console.log(exercise.image_url)
 
   const onStoryChange = React.useCallback(evt => {
     setStory(evt.currentTarget.innerHTML)
@@ -77,8 +105,6 @@ const ExerciseCreation = () => {
       return old;
       });
   }
-
-  console.log(story, compoundNouns, phrases)
 
   if (loading) {
     return (
@@ -125,6 +151,18 @@ const ExerciseCreation = () => {
                 fluid
                 style={{ maxHeight: "90%" }}
               />
+              <div className="audio-wrapper regen" onClick={genImage}>
+                {!isLoading && <FaArrowsRotate />}
+                <ColorRing
+                  visible={isLoading}
+                  height="80"
+                  width="80"
+                  ariaLabel="blocks-loading"
+                  wrapperStyle={{}}
+                  wrapperClass="blocks-wrapper"
+                  colors={['#6b89b2', '#9ac5ff', '#6b89b2', '#9ac5ff', '#6b89b2']}
+                />
+              </div>
             </Col>
             <Col className="d-flex flex-column justify-content-center align-items-center ">
               {" "}
@@ -204,7 +242,7 @@ const ExerciseCreation = () => {
                   style={{ width: "49%", height: "3em" }}
                   onClick={saveExercise}
                 >
-                  Add to list
+                  Save
                 </Button>
                 <Button className="btn-danger" style={{ width: "49%" }}
                   onClick={goBack}

@@ -1,0 +1,14 @@
+{
+    "role": "patient",
+    "password": "123",
+    "email": "janesmith@example.com",
+    "name": "Jane Smith",
+    "age": 15,
+    "condition": "Diagnosed with CAS",
+    "symptoms": [
+        "Can't pronounce words with the 's' sound",
+        "Voicing errors"
+    ],
+    "img": "profile1.png",
+    "_id": "1e0f12b4-163b-432e-8140-c636c5e6de81"
+}

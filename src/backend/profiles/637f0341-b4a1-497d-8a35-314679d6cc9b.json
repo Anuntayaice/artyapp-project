@@ -1,0 +1,14 @@
+{
+    "role": "patient",
+    "password": "123",
+    "email": "charliewilson@example.com",
+    "name": "Charlie Wilson",
+    "age": 12,
+    "condition": "Diagnosed with CAS",
+    "symptoms": [
+        "Vowel distortions",
+        "Trouble moving from syllable to syllable"
+    ],
+    "img": "profile2.png",
+    "_id": "637f0341-b4a1-497d-8a35-314679d6cc9b"
+}

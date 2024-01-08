@@ -1,0 +1,14 @@
+{
+    "role": "patient",
+    "password": "123",
+    "email": "johndoe@example.com",
+    "name": "John Doe",
+    "age": 13,
+    "condition": "Social Anxiety",
+    "symptoms": [
+        "Difficulty pronouncing words",
+        "Slurred speech"
+    ],
+    "img": "profile1.png",
+    "_id": "f4911e7c-2054-4fb1-8abe-7adbc7bc2c39"
+}

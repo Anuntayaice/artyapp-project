@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Form, Button, Container, Row, Col, Image } from "react-bootstrap";
-import PatientCard from "../components/cards/PatientCard";
+import ExerciseCard from "../components/cards/ExerciseCard";
 import { useNavigate } from "react-router-dom";
 
-const PatientListPage = () => {
+const ExerciseListOverview = () => {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate(`/therapist/add-patient`);
+    navigate(`/therapist/new-exercise-overview`);
   };
   
-  const [allPatients, setAllPatients] = useState(undefined);
+  const [allExercises, setAllExercises] = useState(undefined);
 
   useEffect(() => {
-    fetch("http://localhost:5000/patients")
+    fetch("http://localhost:5000/get_exercises_data")
       .then((response) => response.json())
       .then((data) => {
-        setAllPatients(data["patients"]);
-        setFilteredPatients(data["patients"]);
+        setAllExercises(data);
+        setFilteredExercises(data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -24,19 +24,19 @@ const PatientListPage = () => {
   }, []);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredPatients, setFilteredPatients] = useState(allPatients);
+  const [filteredExercises, setFilteredExercises] = useState(allExercises);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    const filtered = allPatients.filter((patient) =>
-      patient.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = allExercises.filter((exercise) =>
+      exercise.data.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setFilteredPatients(filtered);
+    setFilteredExercises(filtered);
   };
 
   const handleReset = () => {
     setSearchTerm("");
-    setFilteredPatients(allPatients);
+    setFilteredExercises(allExercises);
   };
 
   return (
@@ -49,7 +49,7 @@ const PatientListPage = () => {
             <Form onSubmit={handleSearch}>
               <Form.Control
                 type="text"
-                placeholder="Search by name"
+                placeholder="Search by description"
                 className="mr-sm-2 pr-5 mb-3"
                 value={searchTerm}
                 style={{ height: "3em", borderRadius: "16px" }}
@@ -86,15 +86,15 @@ const PatientListPage = () => {
               style={{ height: "3em", borderRadius: "12px" }}
               onClick={handleClick}
             >
-              Add Patient
+              Add Exercise
             </Button>
           </Col>
         </Row>
 
         <Row>
-          {filteredPatients && filteredPatients.map((patient) => (
-            <Col key={patient._id} md={12} className="mb-3 therapist-font">
-              <PatientCard {...patient} />
+          {filteredExercises && filteredExercises.map((exercise) => (
+            <Col key={exercise.exercise_id} md={12} className="mb-3 therapist-font">
+              <ExerciseCard exercise_id={exercise.exercise_id} {...exercise.data} />
             </Col>
           ))}
         </Row>
@@ -103,4 +103,4 @@ const PatientListPage = () => {
   );
 };
 
-export default PatientListPage;
+export default ExerciseListOverview;

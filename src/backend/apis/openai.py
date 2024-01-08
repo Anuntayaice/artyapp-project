@@ -118,8 +118,9 @@ class OpenAI(Exercise):
         print(content)
         # get the description from the answer
         # it is between 'DESCRIPTION: ' and 'STORY:'
-        description = content.split('DESCRIPTION: ')[1].split('STORY: ')[0]
-        story = content.split('STORY: ')[1].split('PHRASES:\n')[0]
+        description = content.split('DESCRIPTION:')[
+            1].split('STORY:')[0].strip()
+        story = content.split('STORY:')[1].split('PHRASES:\n')[0].strip()
         phrases = content.split('PHRASES:\n')[1].split(
             'COMPOUND NOUNS:\n')[0].split('\n')
         compound_nouns = content.split('COMPOUND NOUNS:\n')[1].split('\n')
@@ -157,6 +158,8 @@ class OpenAI(Exercise):
                 "image_url": image['content']['image_url'],
                 "phrases": [phrase.strip() for phrase in phrases if phrase],
                 "compound_nouns": [noun.strip() for noun in compound_nouns if noun],
+                "speech_focus": speech_focus,
+                "interests": interests
             }
         }
 
@@ -177,7 +180,7 @@ class OpenAI(Exercise):
             client.api_key = os.getenv("OPENAI_API_KEY")
 
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4-1106-preview",
             messages=messages
         )
 

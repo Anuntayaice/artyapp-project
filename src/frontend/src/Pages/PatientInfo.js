@@ -13,7 +13,7 @@ const PatientInfo = () => {
     return <p>Error.</p>;
   }
   const handleButtonClick = () => {
-    navigate(`/therapist/${patient.patientId}/exercise-overview`, {
+    navigate(`/therapist/exercise-overview`, {
       state: { patient },
     });
   };
@@ -21,7 +21,7 @@ const PatientInfo = () => {
   return (
     
     <div
-      className="bg-dark vh-100 pt-4 px-4"
+      className="bg-dark pt-4 px-4"
     >
       <Container>
       <Card
@@ -76,13 +76,13 @@ const PatientInfo = () => {
         </Col>{" "}
       </Row>
 
-      <Button
+      {/*<Button
         className="d-block w-100 mt-3"
         style={{ height: "3.5em" }}
         onClick={handleButtonClick}
       >
         Click here to view exercises
-      </Button>
+  </Button>*/}
       </Container>
     </div>
   );

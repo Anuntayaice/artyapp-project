@@ -63,14 +63,6 @@ const MainNavBar = () => {
           <Navbar.Collapse className="justify-content-end navbar-icons">
             <Nav.Link
               className="d-flex align-items-center m-3"
-              //href="/login"
-              active={activeSection === "login"}
-              onClick={() => handleNavClick("login")}
-            >
-              <FaGear />
-            </Nav.Link>
-            <Nav.Link
-              className="d-flex align-items-center m-3"
               href="/login"
               active={activeSection === "login"}
               onClick={() => handleNavClick("login")}

@@ -32,14 +32,6 @@ const ExerciseOverviewforTherapist = () => {
     ,
   ]);
 
-
-  const location = useLocation();
-  const { patient } = location.state;
-
-  if (!patient) {
-    return <p>Error loading patient data.</p>;
-  }
-
   const renderExerciseCards = () => {
     return exerciseData.map((exercise) => (
       <Row>
@@ -54,7 +46,7 @@ const ExerciseOverviewforTherapist = () => {
     <div
       className="bg-dark py-4 px-4 text-white"
     >
-      <h2>Select Exercise Type for {patient.patientName}</h2>
+      <h2>Select New Exercise Type</h2>
       <div className="container d-flex justify-content-center align-items-center ">
         <Row className="mt-5 d-flex justify-content-around">
           {renderExerciseCards()}

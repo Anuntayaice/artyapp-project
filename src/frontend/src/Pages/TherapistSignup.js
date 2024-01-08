@@ -3,7 +3,7 @@ import TherapistSignupCard from "../components/cards/TherapistSignupCard";
 import { Image } from "react-bootstrap";
 const TherapistSignup = () => {
   return (
-    <div className="bg-dark d-flex flex-column align-items-center justify-content-start  vh-100">
+    <div className="bg-dark d-flex flex-column align-items-center justify-content-start min-height-bg">
       <Image
         src="/images/artyIcon.png"
         fluid

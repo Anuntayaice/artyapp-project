@@ -56,16 +56,30 @@ const TherapistNavBar = () => {
           >
             Patients
           </Navbar.Brand>
+          <Navbar.Brand
+            href="/exercises"
+            active={
+              activeSection === "exercises" ||
+              location.pathname === "/exercises"
+            }
+            onClick={() => handleNavClick("exercises")}
+            style={{
+              color: "white",
+              fontSize: "1.5em",
+              borderBottom:
+                activeSection === "exercises" ||
+                location.pathname === "/exercises"
+                  ? "5px solid white"
+                  : "none",
+              borderRadius: "7px",
+              transition: "border-bottom 0.4s ease-in-out",
+            }}
+            className="mx-5"
+          >
+            Exercises
+          </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end navbar-icons">
-            <Nav.Link
-                className="d-flex align-items-center m-3"
-                //href="/login"
-                active={activeSection === "login"}
-                onClick={() => handleNavClick("login")}
-              >
-              <FaGear />
-            </Nav.Link>
             <Nav.Link
               className="d-flex align-items-center m-3"
               href="/login"

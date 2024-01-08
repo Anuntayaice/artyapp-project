@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LoginCard from "../components/cards/LoginCard";
+import PatientPageCard from "../components/cards/PatientPageCard";
+import TherapistPageCard from "../components/cards/TherapistPageCard";
 import { Image } from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
-export const Login = () => {
+export const Login = ({ user, setUser }) => {
+
+  const [role, _setRole] = React.useState(user ? user.role : null);
+
   return (
-    <div className="bg-secondary d-flex flex-column align-items-center justify-content-center vh-100">
+    <div className={`${role === 'therapist' ? 'bg-dark' : 'bg-secondary'} d-flex flex-column align-items-center justify-content-center vh-100`}>
       <Image
         src="/images/artynotext.png"
         fluid
@@ -16,7 +21,13 @@ export const Login = () => {
         }}
       />
 
-      <LoginCard />
+      {!role && <LoginCard setUser={setUser}/>}
+      {role === 'therapist' && (
+        <TherapistPageCard user={user} setUser={setUser}/>
+      )}
+      {role === 'patient' && (
+        <PatientPageCard user={user} setUser={setUser}/>
+      )}
     </div>
   );
 };

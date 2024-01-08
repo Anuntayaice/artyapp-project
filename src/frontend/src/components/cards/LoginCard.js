@@ -11,7 +11,7 @@ import {
 import "../../css/LoginCard.css";
 import { useState } from "react";
 
-const LoginCard = () => {
+const LoginCard = ({setUser}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,7 +24,7 @@ const LoginCard = () => {
     setPassword(e.target.value);
   };
 
-  const handleLogin = () => {
+  /*const handleLogin = () => {
     // Check if the email and password are correct
     if (email === "patient@example.com" && password === "123") {
       window.location.href = "/exerciselist";
@@ -35,7 +35,32 @@ const LoginCard = () => {
     }
     console.log("Email:", email);
     console.log("Password:", password);
-  };
+  };*/
+
+  const handleLogin = () => {
+    fetch("http://localhost:5000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email, password: password }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        if (!data.error) {
+          setUser(data);
+          if (data.role === "patient") {
+            window.location.href = "/exerciselist";
+          } else if (data.role === "therapist") {
+            window.location.href = "/therapist-patientlist";
+          }
+        } else {
+          setError("Invalid email or password");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
    
  
 
@@ -72,7 +97,8 @@ const LoginCard = () => {
                   onChange={handlePasswordChange}
                 />
               </InputGroup>
-              <h6 className="text-end">Forget password?</h6>
+              {error && <p className="text-danger">{error}</p>}
+              {/*<h6 className="text-end">Forget password?</h6>*/}
               <div className="d-grid gap-2">
                 <Button
                   variant="primary"
@@ -83,12 +109,12 @@ const LoginCard = () => {
                   Login
                 </Button>
               </div>
-              <div className="flex">
+              {/*<div className="flex">
                 <h6 className="custom-font">
                   <span>Don’t have an account? </span>
                   <span style={{ color: "#FF5757" }}>SIGN UP</span>
                 </h6>
-              </div>
+  </div>*/}
             </div>
           </Col>
         </Row>

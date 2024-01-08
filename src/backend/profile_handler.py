@@ -21,10 +21,23 @@ class ProfileHandler:
     def get_profiles(self):
         return list(self.profiles.values())
 
+    def login(self, email, password):
+        for profile in self.profiles.values():
+            if profile['email'] == email and profile['password'] == password:
+                return profile
+        return None
+
     def get_profile(self, profile_id):
         if profile_id in self.profiles:
             return self.profiles[profile_id]
         return None
+
+    def get_patients(self):
+        patients = []
+        for profile in self.profiles.values():
+            if profile['role'] == 'patient':
+                patients.append(profile)
+        return patients
 
     def add_or_update_profile(self, profile):
         status_response = {}
@@ -34,6 +47,17 @@ class ProfileHandler:
             status_response['profile'] = profile
         else:
             status_response['status'] = 'Updated profile.'
+
+        self.profiles[profile['_id']] = {
+            '_id': profile['_id'] or self.profiles[profile['_id']]['_id'],
+            'password': profile['password'] or self.profiles[profile['_id']]['password'] or '',
+            'name': profile['name'] or self.profiles[profile['_id']]['name'] or '',
+            'email': profile['email'] or self.profiles[profile['_id']]['email'] or '',
+            'role': profile['role'] or self.profiles[profile['_id']]['role'] or '',
+            'condition': profile['condition'] or self.profiles[profile['_id']]['condition'] or '',
+            'symptoms': profile['symptoms'] or self.profiles[profile['_id']]['symptoms'] or '',
+            'age': profile['age'] or self.profiles[profile['_id']]['age'] or ''
+        }
 
         self.profiles[profile['_id']] = profile
         self.save_profile(profile)

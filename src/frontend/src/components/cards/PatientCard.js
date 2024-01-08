@@ -2,18 +2,20 @@ import React from "react";
 import { Card, Image, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "../../css/PatientCard.css";
-const PatientCard = ({ id, name, symptoms, condition, img, age }) => {
+const PatientCard = ({ _id, name, symptoms, condition, img, age }) => {
   const patient = {
-    patientId: id,
+    patientId: _id,
     patientName: name,
     patientSymptoms: symptoms,
     patientCondition: condition,
     patientImg: img,
     patientAge: age,
   };
+
+  console.log('symptoms', symptoms)
   return (
     <Link
-      to={`/therapist/${id}`}
+      to={`/therapist/${_id}`}
       className="text-decoration-none"
       state={{ patient }}
     >
@@ -38,7 +40,9 @@ const PatientCard = ({ id, name, symptoms, condition, img, age }) => {
           </Col>
           <Col md={5} style={{ maxHeight: "3em", overflow: "hidden"}}>
             {" "}
-            <h5 style={{fontSize: '1em'}}>{symptoms}</h5>
+            {symptoms.map(element => {
+              return <h5 style={{fontSize: '1em'}}>{element}</h5>
+            })}
           </Col>{" "}
           <Col className="d-flex align-items-end justify-content-end " md={1}>
             {" "}

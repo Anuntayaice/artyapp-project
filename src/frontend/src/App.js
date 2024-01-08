@@ -14,24 +14,28 @@ import ExerciseOverviewforTherapist from "./Pages/ExerciseOverviewforTherapist";
 import ExerciseCreation from "./Pages/ExerciseCreation";
 import TherapistSignup from "./Pages/TherapistSignup";
 import AddPatient from "./Pages/AddPatient";
+import ExerciseListOverview from "./Pages/ExerciseListOverview";
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { useState } from "react";
 
 function App() {
   const isHomePage = window.location.pathname === "/";
-  const isLoginPage = window.location.pathname === "/login";
-  const isTherapistPage = window.location.pathname.startsWith("/therapist");
+
+  const [user, setUser] = useLocalStorage("user", null);
+  const [role, _setRole] = useState(user ? user.role : null);
 
   return (
-      <div className="App" style={{
+      <div style={{
         backgroundImage: isHomePage ? 'url("/images/mainbg.png")' : "none",
         height: "100vh",
         backgroundSize: '100% auto'
-      }}>
+      }} className={`App ${role && role === 'therapist' ? 'bg-dark' : 'bg-secondary'}`}>
         <BrowserRouter>
-          {isLoginPage || isTherapistPage || isHomePage ? null : <MainNavBar />}
-          {isTherapistPage ? <TherapistNavBar /> : null}
+          {!role || role === 'therapist' || isHomePage ? null : <MainNavBar />}
+          {role && role === 'therapist' && !isHomePage ? <TherapistNavBar /> : null}
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login user={user} setUser={setUser}/>} />
             {/*<Route path="/mainexercise" element={<MainExercise />} />*/}
             <Route path="/exercise/:id" element={<Exercise />} />
             {/*<Route path="/sampleexercise" element={<SampleExercise />} */}
@@ -42,9 +46,10 @@ function App() {
             ></Route>
             <Route path="/exerciselist" element={<ExerciseList />} />
             <Route path="/therapist-patientlist" element={<PatientList />} />
+            <Route path="/exercises" element={<ExerciseListOverview />} />
             <Route path="/therapist/:id" element={<PatientInfo />} />
             <Route
-              path="/therapist/:id/exercise-overview"
+              path="/therapist/new-exercise-overview"
               element={<ExerciseOverviewforTherapist />}
             />
             <Route

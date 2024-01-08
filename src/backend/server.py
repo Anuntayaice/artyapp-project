@@ -8,6 +8,7 @@ import shutil
 import time
 import requests
 from threading import Thread
+import json
 
 from apis.openai import OpenAI
 from apis.azure import Azure
@@ -33,18 +34,15 @@ def gen_audios(exercise_id):
     if not os.path.exists(f'exercises/{exercise_id}'):
         return jsonify({'error': 'Exercise does not exist.'})
 
-    # get the exercise phrases and compound nouns
+    # get the exercise phrases and compound nouns from the data.json file
     phrases = []
     compound_nouns = []
-    with open(f'exercises/{exercise_id}/phrases.txt', 'r') as f:
-        phrases = f.readlines()
-    with open(f'exercises/{exercise_id}/compound_nouns.txt', 'r') as f:
-        compound_nouns = f.readlines()
-
-    # load story
     story = ''
-    with open(f'exercises/{exercise_id}/story.txt', 'r') as f:
-        story = f.read()
+    with open(f'exercises/{exercise_id}/data.json', 'r') as f:
+        data = json.load(f)
+        phrases = data['phrases']
+        compound_nouns = data['compound_nouns']
+        story = data['story']
 
     # create or replace the audios folder
     if os.path.exists(f'exercises/{exercise_id}/audios'):
@@ -224,12 +222,12 @@ def get_exercise():
     compound_nouns = []
     story = ''
     phase_1, phase_2 = '', ''
-    with open(f'exercises/{exercise_id}/phrases.txt', 'r') as f:
-        phrases = f.readlines()
-    with open(f'exercises/{exercise_id}/compound_nouns.txt', 'r') as f:
-        compound_nouns = f.readlines()
-    with open(f'exercises/{exercise_id}/story.txt', 'r') as f:
-        story = f.read().strip()
+    with open(f'exercises/{exercise_id}/data.json', 'r') as f:
+        data = json.load(f)
+        phrases = data['phrases']
+        compound_nouns = data['compound_nouns']
+        story = data['story']
+
     with open(f'exercises/phase_1.txt', 'r') as f:
         phase_1 = f.read().strip()
     with open(f'exercises/phase_2.txt', 'r') as f:
@@ -240,7 +238,9 @@ def get_exercise():
         'exercise': [
             {'type': 'story', 'content': story},
             {'type': 'phase', 'content': phase_1, 'audio_name': '1'},
-        ]
+        ],
+        'speech_focus': data['speech_focus'],
+        'interests': data['interests']
     }
 
     for i, phrase in enumerate(phrases):
@@ -257,6 +257,22 @@ def get_exercise():
     return jsonify(exercise_sequence)
 
 
+@app.route('/get_exercises_data', methods=['GET'])
+def get_exercises_data():
+    # return all exercises data.json
+    exercises = []
+    for exercise_id in os.listdir('exercises'):
+        if exercise_id.isdigit():
+            with open(f'exercises/{exercise_id}/data.json', 'r') as f:
+                data = json.load(f)
+                exercises.append({
+                    'exercise_id': exercise_id,
+                    'data': data,
+                })
+
+    return jsonify(exercises)
+
+
 @app.route('/get_exercise_ids', methods=['GET'])
 def get_exercise_ids():
     exercise_ids = os.listdir('exercises')
@@ -271,9 +287,24 @@ def profile():
     if request.method == 'POST':
         return jsonify(profile_handler.add_or_update_profile(kwargs))
     elif request.method == 'GET':
-        return jsonify({"profiles": profile_handler.get_profiles()})
+        return jsonify({"profile": profile_handler.get_profile(kwargs['_id'])})
     elif request.method == 'DELETE':
         return jsonify(profile_handler.delete_profile(kwargs['_id']))
+
+
+@app.route('/patients', methods=['GET'])
+def profiles():
+    return jsonify({"patients": profile_handler.get_patients()})
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    kwargs = request.get_json(force=True)
+    profile = profile_handler.login(kwargs['email'], kwargs['password'])
+    if profile:
+        return jsonify(profile)
+    else:
+        return jsonify({'error': 'Profile does not exist.'})
 
 
 @app.route('/gen_exercise', methods=['POST'])
@@ -320,6 +351,38 @@ def gen_description_exercise():
     return answer
 
 
+@app.route('/get_exercise_for_edit', methods=['GET'])
+def get_exercise_for_edit():
+    # get urlencoded form data
+    kwargs = request.args.to_dict()
+
+    exercise_id = kwargs.get("exercise_id")
+
+    # get the exercise phrases, compound nouns, and story
+    with open(f'exercises/{exercise_id}/data.json', 'r') as f:
+        data = json.load(f)
+        phrases = data['phrases']
+        compound_nouns = data['compound_nouns']
+        story = data['story']
+        description = data['description']
+        speech_focus = data['speech_focus']
+        interests = data['interests']
+
+    exercise = {
+        'exercise_id': exercise_id,
+        'exercise': {
+            'story': story,
+            'description': description,
+            'phrases': phrases,
+            'compound_nouns': compound_nouns,
+            'speech_focus': speech_focus,
+            'interests': interests
+        }
+    }
+
+    return jsonify(exercise)
+
+
 @app.route('/gen_image', methods=['POST'])
 def gen_image():
     if request.method != 'POST':
@@ -362,35 +425,42 @@ def save_exercise():
     image_url = kwargs.get("image_url")
     phrases = kwargs.get("phrases").split('\n')
     compound_nouns = kwargs.get("compound_nouns").split('\n')
+    speech_focus = kwargs.get("speech_focus")
+    interests = kwargs.get("interests")
 
-    # get the id of the exercise, which is the number of folders in the exercises folder + 1
-    exercise_id = len(os.listdir('exercises')) - 4 + 1
-    exercise_folder = f'exercises/{exercise_id}'
+    exercise_id = None
+    exercise_folder = None
 
-    # create the folder
-    os.mkdir(exercise_folder)
+    if kwargs.get("exercise_id"):
+        exercise_id = kwargs.get("exercise_id")
+        exercise_folder = f'exercises/{exercise_id}'
+        # delete the exercise folder
+    else:
+        # get the id of the exercise, which is the number of folders in the exercises folder + 1
+        exercise_id = len(os.listdir('exercises')) - 4 + 1
+        exercise_folder = f'exercises/{exercise_id}'
+        # create the folder
+        os.mkdir(exercise_folder)
 
-    # save the description
-    with open(f'{exercise_folder}/description.txt', 'w') as f:
-        f.write(description)
+    if not image_url.startswith('blob:'):
+        # save the image
+        # retrieve the image from the url
+        image_data = requests.get(image_url).content
+        with open(f'{exercise_folder}/image.png', 'wb') as f:
+            f.write(image_data)
 
-    # save the story
-    with open(f'{exercise_folder}/story.txt', 'w') as f:
-        f.write(story)
+    data = {
+        'story': story,
+        'description': description,
+        'phrases': phrases,
+        'compound_nouns': compound_nouns,
+        'speech_focus': speech_focus,
+        'interests': interests
+    }
 
-    # save the image
-    # retrieve the image from the url
-    image_data = requests.get(image_url).content
-    with open(f'{exercise_folder}/image.png', 'wb') as f:
-        f.write(image_data)
-
-    # save the phrases
-    with open(f'{exercise_folder}/phrases.txt', 'w') as f:
-        f.write('\n'.join(phrases))
-
-    # save the compound nouns
-    with open(f'{exercise_folder}/compound_nouns.txt', 'w') as f:
-        f.write('\n'.join(compound_nouns))
+    # save data into a json file
+    with open(f'{exercise_folder}/data.json', 'w') as f:
+        json.dump(data, f)
 
     print('Exercise saved successfully.')
     # create a thread to generate the audios
@@ -420,7 +490,7 @@ def gen_audio_assessment():
 
     text = request.form.get('text')
     audio = request.files.get('audio')
-
+    print(audio)
     # read the ogg audio file with soundfile
     data, samplerate = soundfile.read(audio)
     filename = audio.filename
