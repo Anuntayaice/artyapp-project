@@ -45,21 +45,26 @@ const PatientInfo = () => {
   }
 
   const getErrorWords = () => {
-    const mistake_colors = {
-      'Mispronunciation': 'red',
-      'Omission': 'gray',
-      'Insertion': '#40E0D0',
-      'None': 'green',
-    }
     if (!patient.patientErrors) {
       return <p>Not enough data yet.</p>
     }
 
-    return patient.patientErrors.map((mistake) => {
-      return <>
-        <h6 style={{margin: 0}}>{mistake.word} <span style={{color: '#808080', margin: 0}}>({mistake.accuracy_score}%)</span></h6>
-        <p style={{color: mistake_colors[mistake.error_type], margin: 0}}>{mistake.error_type}</p>
-      </>
+    const uniqueWords = {}
+
+    for (const mistake of patient.patientErrors) {
+      if (mistake.word in uniqueWords) {
+        uniqueWords[mistake.word].push(mistake.accuracy_score)
+      } else {
+        uniqueWords[mistake.word] = [mistake.accuracy_score]
+      }
+    }
+
+    for (const word in uniqueWords) {
+      uniqueWords[word] = (uniqueWords[word].reduce((a, b) => a + b, 0) / uniqueWords[word].length).toFixed(2)
+    }
+
+    return Object.keys(uniqueWords).map((word) => {
+      return <h6 style={{margin: 0}}>{word} <span style={{color: 'gray'}}>({uniqueWords[word]}%)</span></h6>
     });
   }
 
@@ -84,7 +89,7 @@ const PatientInfo = () => {
     })
     
     for (const phoneme in phonemes) {
-      phonemes[phoneme] = phonemes[phoneme].reduce((a, b) => a + b, 0) / phonemes[phoneme].length
+      phonemes[phoneme] = (phonemes[phoneme].reduce((a, b) => a + b, 0) / phonemes[phoneme].length).toFixed(2)
     }
 
     return Object.keys(phonemes).map((phoneme) => {
@@ -169,7 +174,9 @@ const PatientInfo = () => {
             >
               {" "}
               <h4>Mistaken Words</h4>
-              {getErrorWords()}
+              <div className="d-flex flex-column flex-wrap w-100" style={{maxHeight: '10em', overflow: 'scroll'}}>
+                {getErrorWords()}
+              </div>
             </Card>
             <Card
               className="border-0 mt-1 d-flex flex-column justify-content-start align-items-center px-4 py-4"
@@ -177,7 +184,7 @@ const PatientInfo = () => {
             >
               {" "}
               <h4>Phoneme Errors</h4>
-              <div className="d-flex flex-column">
+              <div className="d-flex flex-column flex-wrap w-100" style={{maxHeight: '10em', overflow: 'scroll'}}>
                 {getPhonemeErrors()}
               </div>
             </Card>
