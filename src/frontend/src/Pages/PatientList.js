@@ -42,7 +42,7 @@ const PatientListPage = () => {
 
   return (
     <div
-      className="pt-5"
+      className="pt-5 bg-dark"
     >
       <Container>
         <Row className="mb-3 d-flex align-items-center">

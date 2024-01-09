@@ -1,0 +1,145 @@
+{
+    "role": "patient",
+    "password": "123",
+    "email": "johnny@example.com",
+    "name": "Johnny Peterson",
+    "age": 16,
+    "condition": "Stutter",
+    "symptoms": [
+        "Difficulty with long sentences"
+    ],
+    "img": "profile2.png",
+    "_id": "630b5f43-6bed-414d-a631-c0bce3b5237d",
+    "exercises": [
+        "1",
+        "3"
+    ],
+    "errors": [
+        {
+            "word": "waddled",
+            "accuracy_score": 48.0,
+            "error_type": "Mispronunciation",
+            "phonemes": [
+                {
+                    "Phoneme": "w",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 47.0
+                    },
+                    "Offset": 16900000,
+                    "Duration": 2000000
+                },
+                {
+                    "Phoneme": "aa",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 29.0
+                    },
+                    "Offset": 19000000,
+                    "Duration": 1900000
+                },
+                {
+                    "Phoneme": "d",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 44.0
+                    },
+                    "Offset": 21000000,
+                    "Duration": 1100000
+                },
+                {
+                    "Phoneme": "ax",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 100.0
+                    },
+                    "Offset": 22200000,
+                    "Duration": 1100000
+                },
+                {
+                    "Phoneme": "l",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 100.0
+                    },
+                    "Offset": 23400000,
+                    "Duration": 1100000
+                },
+                {
+                    "Phoneme": "d",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 100.0
+                    },
+                    "Offset": 24600000,
+                    "Duration": 2300000
+                }
+            ]
+        },
+        {
+            "word": "toboggans",
+            "accuracy_score": 47.0,
+            "error_type": "Mispronunciation",
+            "phonemes": [
+                {
+                    "Phoneme": "t",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 16.0
+                    },
+                    "Offset": 18900000,
+                    "Duration": 900000
+                },
+                {
+                    "Phoneme": "ax",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 34.0
+                    },
+                    "Offset": 19900000,
+                    "Duration": 1100000
+                },
+                {
+                    "Phoneme": "b",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 44.0
+                    },
+                    "Offset": 21100000,
+                    "Duration": 1100000
+                },
+                {
+                    "Phoneme": "aa",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 38.0
+                    },
+                    "Offset": 22300000,
+                    "Duration": 1300000
+                },
+                {
+                    "Phoneme": "g",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 64.0
+                    },
+                    "Offset": 23700000,
+                    "Duration": 900000
+                },
+                {
+                    "Phoneme": "ax",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 100.0
+                    },
+                    "Offset": 24700000,
+                    "Duration": 700000
+                },
+                {
+                    "Phoneme": "n",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 100.0
+                    },
+                    "Offset": 25500000,
+                    "Duration": 1300000
+                },
+                {
+                    "Phoneme": "z",
+                    "PronunciationAssessment": {
+                        "AccuracyScore": 100.0
+                    },
+                    "Offset": 26900000,
+                    "Duration": 2300000
+                }
+            ]
+        }
+    ]
+}

@@ -48,6 +48,10 @@ class ProfileHandler:
         else:
             status_response['status'] = 'Updated profile.'
 
+        errors = profile['errors'] if 'errors' in profile.keys() else self.profiles[profile['_id']]['errors'] if (
+            profile['_id'] in self.profiles.keys() and 'errors' in self.profiles[profile['_id']].keys()) else []
+        exercises = profile['exercises'] if 'exercises' in profile.keys() else self.profiles[profile['_id']]['exercises'] if (
+            profile['_id'] in self.profiles.keys() and 'exercises' in self.profiles[profile['_id']].keys()) else []
         self.profiles[profile['_id']] = {
             '_id': profile['_id'] or self.profiles[profile['_id']]['_id'],
             'password': profile['password'] or self.profiles[profile['_id']]['password'] or '',
@@ -57,8 +61,8 @@ class ProfileHandler:
             'condition': profile['condition'] or self.profiles[profile['_id']]['condition'] or '',
             'symptoms': profile['symptoms'] or self.profiles[profile['_id']]['symptoms'] or '',
             'age': profile['age'] or self.profiles[profile['_id']]['age'] or '',
-            'errors': profile['errors'] if 'errors' in profile.keys() else self.profiles[profile['_id']]['errors'] if 'errors' in self.profiles[profile['_id']].keys() else [],
-            'exercises': profile['exercises'] if 'exercises' in profile.keys() else self.profiles[profile['_id']]['exercises'] if 'exercises' in self.profiles[profile['_id']].keys() else [],
+            'errors': errors,
+            'exercises': exercises
         }
 
         self.profiles[profile['_id']] = profile

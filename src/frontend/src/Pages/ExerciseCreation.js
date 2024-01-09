@@ -193,7 +193,7 @@ const ExerciseCreation = () => {
                             <h2>Phrases</h2>
                           </div>
                           <div className="input-boxes-exercise">
-                            {phrases.map((phrase, index) => (
+                            {phrases && phrases.map((phrase, index) => (
                               <ContentEditable
                                 spellCheck="false"
                                 onChange={onPhraseChange(index)}
@@ -213,7 +213,7 @@ const ExerciseCreation = () => {
                             <h2>Tongue Twisters</h2>
                           </div>
                           <div className="input-boxes-exercise">
-                            {compoundNouns.map((noun, index) => (
+                            {compoundNouns && compoundNouns.map((noun, index) => (
                               <ContentEditable
                                 spellCheck="false"
                                 onChange={onCompoundNounChange(index)}

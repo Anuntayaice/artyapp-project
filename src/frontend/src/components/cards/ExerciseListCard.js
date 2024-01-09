@@ -27,7 +27,7 @@ const ExerciseListCard = ({ exercise }) => {
         console.log(data);
         setIsLoading(false);
         // navigate to the exercise page
-        navigate(`/therapist/create-exercise`, { state: { exercise: data } });
+        navigate(`/therapist/create-exercise`, { state: { exercise: data.content } });
       });
     }
 
