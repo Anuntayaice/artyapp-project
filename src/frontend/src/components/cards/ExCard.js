@@ -13,7 +13,7 @@ import Modal from 'react-bootstrap/Modal';
 import { Tick } from 'react-crude-animated-tick';
 import { Tooltip } from 'react-tooltip';
 
-const ExCard = ({ imageSrc, exerciseId, exercise }) => {
+const ExCard = ({ imageSrc, exerciseId, exercise, userId }) => {
   const [audio, setAudio] = useState(undefined);
   const [loading, setLoading] = useState(true);
   const [canAdvance, setCanAdvance] = useState(false);
@@ -37,7 +37,7 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
   const handleClick = () => {
     window.location.href = "/exerciselist";
   };
-  
+
   //console.log(exercise[currentIndex])
 
   const handleNextClick = () => {
@@ -61,9 +61,10 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
     const formData = new FormData();
     let blob = await fetch(blobURL).then(r => r.blob());
     console.log('in getAssessment', blobURL)
-
+    console.log(userId)
     formData.append("audio", blob, 'audio.wav');
     formData.append("text", exercise[currentIndex]['content']);
+    formData.append("user_id", userId);
     let response = await fetch("http://localhost:5000/gen_audio_assessment", {
       method: "POST",
       body: formData,
@@ -240,15 +241,16 @@ const ExCard = ({ imageSrc, exerciseId, exercise }) => {
             <div className="w-50">
               {" "}
               <h4 style={{ lineHeight: "2em" }}>
-                Congratulations! You have just received your first badge! Click
-                here to see all your badges or move on to the next exersize
+                Congratulations! You have completed the Exercise! Click
+                here to go back to the main screen!
               </h4>
             </div>
             <Button
               className="my-4"
               style={{ width: "15em", fontSize: "1.5em" }}
+              onClick={handleClick}
             >
-              Next Exercise
+              Go back to main screen
             </Button>
           </div>
         ) : (

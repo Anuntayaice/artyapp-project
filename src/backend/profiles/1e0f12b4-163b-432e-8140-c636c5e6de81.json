@@ -10,5 +10,9 @@
         "Voicing errors"
     ],
     "img": "profile1.png",
-    "_id": "1e0f12b4-163b-432e-8140-c636c5e6de81"
+    "_id": "1e0f12b4-163b-432e-8140-c636c5e6de81",
+    "exercises": [
+        "2",
+        "1"
+    ]
 }

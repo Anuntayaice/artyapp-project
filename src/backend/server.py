@@ -281,15 +281,43 @@ def get_exercise_ids():
     return jsonify(exercise_ids)
 
 
+@app.route('/toggle_exercise', methods=['POST'])
+def toggle_exercise():
+    kwargs = request.get_json(force=True)
+    exercise_id = kwargs.get("exercise_id")
+    profile_id = kwargs.get("profile_id")
+    profile = profile_handler.get_profile(profile_id)
+    if profile:
+        if 'exercises' not in profile.keys():
+            profile['exercises'] = [exercise_id]
+        elif exercise_id in profile['exercises']:
+            profile['exercises'].remove(exercise_id)
+        else:
+            profile['exercises'].append(exercise_id)
+        profile_handler.add_or_update_profile(profile)
+        return jsonify({"profile": profile})
+    else:
+        return jsonify({'error': 'Profile does not exist.'})
+
+
 @app.route('/profile', methods=['GET', 'POST', 'DELETE'])
 def profile():
     kwargs = request.get_json(force=True)
     if request.method == 'POST':
         return jsonify(profile_handler.add_or_update_profile(kwargs))
-    elif request.method == 'GET':
-        return jsonify({"profile": profile_handler.get_profile(kwargs['_id'])})
     elif request.method == 'DELETE':
         return jsonify(profile_handler.delete_profile(kwargs['_id']))
+
+
+@app.route('/get_profile', methods=['POST'])
+def get_profile():
+    kwargs = request.get_json(force=True)
+    profile_id = kwargs.get("profile_id")
+    profile = profile_handler.get_profile(profile_id)
+    if profile:
+        return jsonify({"profile": profile})
+    else:
+        return jsonify({'error': 'Profile does not exist.'})
 
 
 @app.route('/patients', methods=['GET'])
@@ -490,6 +518,8 @@ def gen_audio_assessment():
 
     text = request.form.get('text')
     audio = request.files.get('audio')
+    user_id = request.form.get('user_id')
+    print(user_id)
     print(audio)
     # read the ogg audio file with soundfile
     data, samplerate = soundfile.read(audio)
@@ -501,6 +531,29 @@ def gen_audio_assessment():
 
     answer = azure.pronunciation_assessment_continuous_from_file(
         text, filename)
+
+    # get user profile
+    profile = profile_handler.get_profile(user_id)
+    if profile:
+        errors = profile['errors'] if 'errors' in profile.keys() else []
+        assessment = answer["NBest"][0]["PronunciationAssessment"]
+        print(assessment)
+        words = answer["NBest"][0]["Words"]
+        for word in words:
+            word_assessment = word["PronunciationAssessment"] if "PronunciationAssessment" in word.keys(
+            ) else None
+            if word_assessment and "AccuracyScore" in word_assessment and word_assessment["AccuracyScore"] < 60:
+                print(word)
+                errors.append({
+                    'word': word["Word"],
+                    'accuracy_score': word_assessment["AccuracyScore"],
+                    'error_type': word_assessment["ErrorType"],
+                    'phonemes': word["Phonemes"]
+                })
+        # append the errors to the profile
+        profile['errors'] = errors
+        print(errors)
+        profile_handler.add_or_update_profile(profile)
 
     os.remove(audio.filename)
 

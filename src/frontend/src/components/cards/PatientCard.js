@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Image, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "../../css/PatientCard.css";
-const PatientCard = ({ _id, name, symptoms, condition, img, age }) => {
+const PatientCard = ({ _id, name, symptoms, condition, img, age, errors, exercises }) => {
   const patient = {
     patientId: _id,
     patientName: name,
@@ -10,9 +10,10 @@ const PatientCard = ({ _id, name, symptoms, condition, img, age }) => {
     patientCondition: condition,
     patientImg: img,
     patientAge: age,
+    patientErrors: errors,
+    patientExercises: exercises ? exercises : []
   };
 
-  console.log('symptoms', symptoms)
   return (
     <Link
       to={`/therapist/${_id}`}

@@ -1,8 +1,8 @@
 import React from "react";
-import { Image, Card, Button, Row, Col } from "react-bootstrap";
+import { Image, Card, Button, Row, Col, Dropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const ExPreviewCard = ({ title, time, level, img, status, week }) => {
+const ExPreviewCard = ({ title, time, level, img, status, exerciseId, selectedItem, setSelectedItem, availableExerciseIds }) => {
   const navigate = useNavigate();
 
   const isClickable = status === "START";
@@ -11,8 +11,12 @@ const ExPreviewCard = ({ title, time, level, img, status, week }) => {
 
   const handleClick = () => {
     if (isClickable) {
-      navigate(`/exercise/${week}`)
+      navigate(`/exercise/${exerciseId}`)
     }
+  };
+
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
   };
   return (
     <Card
@@ -26,21 +30,39 @@ const ExPreviewCard = ({ title, time, level, img, status, week }) => {
         className="mt-5 mb-4"
       />
       <Card.Body>
-        <Card.Title className="mb-4">{title}</Card.Title>
+        <Card.Title className="mb-2">{title}</Card.Title>
         <Row className="px-5">
           <Col lg={12} className="border-bottom d-inline-block  mb-2">
             {time}
           </Col>
-          <Col lg={12} className="border-bottom d-inline-block  mb-2">
-            {level}
-          </Col>
-          <Col lg={12} className="border-bottom d-inline-block mb-2">
-            {" "}
-            <Image src="/images/medal.png" style={{ maxWidth: "1.5em" }} />
-          </Col>
+          <Dropdown className="custom-font">
+              <Dropdown.Toggle
+                variant="none"
+                style={{
+                  background: "none",
+                  border: "2px solid black",
+                  width: "12em",
+                }}
+                className="mt-2"
+              >
+                {selectedItem ? `Exercise ${selectedItem}` : "Select Exercise"}
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                {availableExerciseIds?.map((item) => (
+                  <Dropdown.Item
+                    key={item}
+                    onClick={() => handleItemClick(item)}
+                    className="custom-font"
+                  >
+                    Exercise {item}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>{" "}
         </Row>
       </Card.Body>
-      {week && (<Button
+      {exerciseId && (<Button
         variant={buttonVariant}
         className="my-4"
         style={{

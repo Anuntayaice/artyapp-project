@@ -17,6 +17,7 @@ const PatientListPage = () => {
       .then((data) => {
         setAllPatients(data["patients"]);
         setFilteredPatients(data["patients"]);
+        console.log(data)
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -94,6 +95,7 @@ const PatientListPage = () => {
         <Row>
           {filteredPatients && filteredPatients.map((patient) => (
             <Col key={patient._id} md={12} className="mb-3 therapist-font">
+              {console.log(patient)}
               <PatientCard {...patient} />
             </Col>
           ))}

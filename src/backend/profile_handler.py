@@ -56,7 +56,9 @@ class ProfileHandler:
             'role': profile['role'] or self.profiles[profile['_id']]['role'] or '',
             'condition': profile['condition'] or self.profiles[profile['_id']]['condition'] or '',
             'symptoms': profile['symptoms'] or self.profiles[profile['_id']]['symptoms'] or '',
-            'age': profile['age'] or self.profiles[profile['_id']]['age'] or ''
+            'age': profile['age'] or self.profiles[profile['_id']]['age'] or '',
+            'errors': profile['errors'] if 'errors' in profile.keys() else self.profiles[profile['_id']]['errors'] if 'errors' in self.profiles[profile['_id']].keys() else [],
+            'exercises': profile['exercises'] if 'exercises' in profile.keys() else self.profiles[profile['_id']]['exercises'] if 'exercises' in self.profiles[profile['_id']].keys() else [],
         }
 
         self.profiles[profile['_id']] = profile

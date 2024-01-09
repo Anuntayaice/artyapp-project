@@ -37,14 +37,14 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login user={user} setUser={setUser}/>} />
             {/*<Route path="/mainexercise" element={<MainExercise />} />*/}
-            <Route path="/exercise/:id" element={<Exercise />} />
+            <Route path="/exercise/:id" element={<Exercise user={user}/>} />
             {/*<Route path="/sampleexercise" element={<SampleExercise />} */}
             <Route path="/signup" element={<PatientSignup />} />
             <Route
               path="/therapist-signup"
               element={<TherapistSignup />}
             ></Route>
-            <Route path="/exerciselist" element={<ExerciseList />} />
+            <Route path="/exerciselist" element={<ExerciseList user={user}/>} />
             <Route path="/therapist-patientlist" element={<PatientList />} />
             <Route path="/exercises" element={<ExerciseListOverview />} />
             <Route path="/therapist/:id" element={<PatientInfo />} />

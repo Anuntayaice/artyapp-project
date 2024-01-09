@@ -6,7 +6,7 @@
 .text-wrapper {
     background-color: white;
     border-radius: 30px;
-    max-height: 75vh;
+    max-height: 80vh;
     padding: 0em 5em;
     overflow-y: scroll;
     min-width: 25em;
@@ -14,7 +14,7 @@
 
 .text-content {
     line-height: 30px;
-    height: 65vh;
+    height: 75vh;
     text-align: center;
     width: 100%;
     display: flex;

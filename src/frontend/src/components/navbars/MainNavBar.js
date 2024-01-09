@@ -57,7 +57,7 @@ const MainNavBar = () => {
             }}
             className="mx-5"
           >
-            Exercise
+            Exercises
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end navbar-icons">

@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import ExCard from "../components/cards/ExCard";
 import { useParams } from "react-router-dom";
 
-const Exercise = () => {
+const Exercise = ({ user }) => {
   const { id: exercise_id } = useParams();
-
   const [exercise, setExercise] = useState([]);
   const [imageSrc, setImageSrc] = useState(undefined);
   
@@ -31,7 +30,7 @@ const Exercise = () => {
   return (
     <div className="bg-secondary d-flex align-items-start justify-content-center">
       {exercise.length !== 0 && (
-        <ExCard imageSrc={imageSrc} exerciseId={exercise_id} exercise={exercise} />
+        <ExCard imageSrc={imageSrc} exerciseId={exercise_id} exercise={exercise} userId={user._id} />
       )}
     </div>
   );

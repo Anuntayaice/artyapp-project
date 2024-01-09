@@ -38,16 +38,19 @@ const ExerciseCard = ({ exercise_id, interests, speech_focus, description, phras
   return (
    <Card className="my-1 patient-card" onClick={handleClick}>
       <Row className="my-2 d-flex align-items-center justify-content-start mx-3">
-        <Col md={2}>
+        <Col md={1}>
           <Image
             src={`/images/${exercise.exerciseImg}`}
             roundedCircle
-            style={{ maxWidth: "6em" }}
+            style={{ maxWidth: "4em" }}
           />
         </Col>
         <Col md={2} className="d-flex flex-column align-items-start">
           {" "}
-          <h4>{exercise.exerciseType}</h4>
+          <div className="d-flex flex-row justify-content-center align-items-center">
+            <h4>({exercise.exerciseId})</h4>
+            <h4> {exercise.exerciseType}</h4>
+          </div>
         </Col>
         <Col md={3} style={{ maxHeight: "3em", overflow: "hidden" }}>
           {" "}
