@@ -7,3 +7,14 @@ flask-apispec
 flask-restful
 gunicorn
 python-dotenv
+apispec
+soundfile
+shutil
+requests
+time
+threading
+json
+dotenv
+openai
+azure.cognitiveservices.speech
+uuid

@@ -132,6 +132,10 @@ const PatientInfo = () => {
     })
   }
 
+  const goToExerciseList = () => {
+    window.location.href = "/exercises";
+  }
+
   return (
     
     <div
@@ -196,7 +200,7 @@ const PatientInfo = () => {
             >
               <h4 className="mb-3">Allowed Exercises</h4>
               {listExercises()}
-              <button className="btn bg-black text-white border-0 my-3">See Exercise List</button>
+              <button className="btn bg-black text-white border-0 my-3" onClick={goToExerciseList}>See Exercise List</button>
             </Card>
           </Col>
         </Row>

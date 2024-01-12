@@ -6,7 +6,11 @@ To run the application locally, you first must have [Node.js and npm](https://do
 
 ### Frontend
 
-TBD
+To run the frontend, execute the following commands:
+
+    cd src/frontend
+    npm i --legacy-peer-deps
+    npm start
 
 ### Backend
 
@@ -16,6 +20,9 @@ To run the backend, execute the following commands:
     cd src/backend
     python server.py
 
-You should also create a .env file on the backend comprising the OpenAI's API Key to generate descriptions. To do so, simply add the following line to the beggining of your .env file:
+You should also create a .env file on the backend comprising the OpenAI's and Azure's API Key to generate descriptions and get assessments. To do so, simply add the following lines to the beggining of your .env file:
 
-    OPENAI_API_KEY=YOUR_API_KEY
+    OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+    AZURE_KEY=YOUR_AZURE_API_KEY
+    AZURE_REGION=YOUR_AZURE_REGION
+    AZURE_LANG=YOUR_AZURE_LANG
