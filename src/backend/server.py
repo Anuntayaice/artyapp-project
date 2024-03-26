@@ -534,7 +534,7 @@ def gen_audio_assessment():
 
     # get user profile
     profile = profile_handler.get_profile(user_id)
-    if profile:
+    if profile and 'NBest' in answer.keys():
         errors = profile['errors'] if 'errors' in profile.keys() else []
         assessment = answer["NBest"][0]["PronunciationAssessment"]
         print(assessment)

@@ -29,10 +29,13 @@ class Azure(Exercise):
         pronunciation_config.apply_to(speech_recognizer)
         speech_recognition_result = speech_recognizer.recognize_once()
 
+        print(reference_text, audio, speech_recognition_result.reason)
+
         # The pronunciation assessment result as a JSON string
         pronunciation_assessment_result_json = speech_recognition_result.properties.get(
             speechsdk.PropertyId.SpeechServiceResponse_JsonResult)
 
+        print(pronunciation_assessment_result_json)
         # convert to dict
         pronunciation_assessment_result_dict = json.loads(
             pronunciation_assessment_result_json)
